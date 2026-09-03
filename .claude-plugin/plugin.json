@@ -1,0 +1,7 @@
+{
+  "name": "ai-lead-skills",
+  "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, procesmap maken, en (in aanbouw) van procesmap naar een importeerbare Lleverage-workflow.",
+  "version": "0.1.0",
+  "author": { "name": "SPAIK", "email": "jochem@spaik.io", "url": "https://spaik.io" },
+  "homepage": "https://github.com/SPAIK-io/ai-lead-skills"
+}
