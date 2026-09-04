@@ -51,7 +51,7 @@ Vijf tot tien stappen. Elke stap krijgt een korte naam (letters en underscores, 
 | `js` | Een stukje code: rekenen, checken, samenvoegen | `{{Naam.result.veld}}` |
 | `branch` | Splitst op een voorwaarde in twee of meer takken | takken heten zoals jij ze noemt |
 | `mens_vraag` | Een mens vult iets aan of corrigeert; de flow wacht | `{{Naam.data.veld}}` |
-| `mens_keur` | Een mens keurt goed of af; de flow wacht en splitst in `goed` en `fout` | takken `goed` / `fout` |
+| `mens_keur` | Een mens keurt goed of af; de flow wacht en splitst in `goed` en `fout` | takken `goed` / `fout`; wie klikte: `{{Naam.resolvedBy}}` |
 | `mail_sturen` | Stuurt een nieuwe mail via Outlook | |
 | `mail_beantwoorden` | Antwoordt op de mail die de flow startte (alleen bij mail-trigger) | |
 | `slack` | Bericht in een Slack-kanaal | |
