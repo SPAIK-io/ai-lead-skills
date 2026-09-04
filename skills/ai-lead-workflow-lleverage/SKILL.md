@@ -56,7 +56,6 @@ Vijf tot tien stappen. Elke stap krijgt een korte naam (letters en underscores, 
 | `mail_beantwoorden` | Antwoordt op de mail die de flow startte (alleen bij mail-trigger) | |
 | `slack` | Bericht in een Slack-kanaal | |
 | `http` | Haalt iets op uit een API of stuurt iets weg | `{{Naam.data}}` |
-| `tabel_schrijven` / `tabel_lezen` | Rij in een Lleverage-tabel schrijven of lezen | `{{Naam.record}}` |
 | `output` | Eindpunt: wat je in de run ziet | |
 
 Triggers: `mail` (nieuwe mail in een map; velden `mailbox`, `map`), `app` (formulier; `velden`),
@@ -76,8 +75,6 @@ Wat elke soort nodig heeft:
 | `mail_beantwoorden` | `tekst` | `aan` |
 | `slack` | `tekst` | `kanaal` |
 | `http` | `url` | `methode`, `body`, `auth` |
-| `tabel_schrijven` | `tabel`, `data` (object) | |
-| `tabel_lezen` | `tabel` | `modus` (`first` of `all`) |
 | `output` | `tekst` | |
 
 Typen voor `uitvoer` en `velden`: `string`, `number`, `boolean`, `array`, en `string?` als het
@@ -155,6 +152,9 @@ paneel, niet in het bovenste.
 ---
 
 ## Wat niet kan, en wat je dan doet
+
+Lleverage-tabellen zitten er nog niet in (het data-veld accepteerde onze vorm niet); een lead
+die iets wil opslaan krijgt voorlopig een `output` met wat er opgeslagen zou worden.
 
 De bouwstenen in de tabel zijn de bouwstenen die we kennen. Een deel is in productie bewezen,
 een deel alleen in een testflow gezien; welke wat is staat in `bouwstenen.md`. Andere koppelingen (Teams,

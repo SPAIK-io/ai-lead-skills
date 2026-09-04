@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "92b14d6c-afb0-4b78-924a-d4b41b66c9b8",
+      "id": "9cfe8d16-906d-45cb-8d28-fd43f99d685e",
       "nodeId": "App",
       "type": "appTrigger",
       "inputs": {
@@ -29,7 +29,7 @@
       "descriptionManual": true
     },
     {
-      "id": "f2cd9691-d2b7-4743-93d4-5dae7e77947e",
+      "id": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe",
       "nodeId": "Form",
       "type": "form",
       "inputs": {
@@ -77,7 +77,7 @@
       "descriptionManual": true
     },
     {
-      "id": "b96af810-44ee-48ee-9056-eba068e11570",
+      "id": "63b09a29-62b7-471f-b0d0-64ec34126bb0",
       "nodeId": "Lees",
       "type": "extract",
       "inputs": {
@@ -127,7 +127,7 @@
       "descriptionManual": true
     },
     {
-      "id": "2b921790-893e-482f-bb62-09646a59f83f",
+      "id": "19139b7e-895e-4909-80c2-3354a39d17d3",
       "nodeId": "Vraag",
       "type": "requestInput",
       "inputs": {
@@ -191,40 +191,7 @@
       "descriptionManual": true
     },
     {
-      "id": "751573d1-5f95-4978-a6fb-e3bdea8bb81d",
-      "nodeId": "Bewaar",
-      "type": "dataTablesCreate",
-      "inputs": {
-        "projectId": {
-          "type": "literal",
-          "value": "<KIES NA IMPORT>"
-        },
-        "tableId": {
-          "type": "literal",
-          "value": "<KIES NA IMPORT>"
-        },
-        "tableName": {
-          "type": "literal",
-          "value": "aanvragen"
-        },
-        "data": {
-          "type": "literal",
-          "value": {
-            "naam": "{{Lees.output.naam}}",
-            "bedrag": "{{Vraag.data.Bedrag}}"
-          }
-        }
-      },
-      "position": {
-        "x": 1805,
-        "y": 45
-      },
-      "width": 320,
-      "description": "Rij schrijven in Lleverage-tabel 'aanvragen'. KIES NA IMPORT: project + tabel.",
-      "descriptionManual": true
-    },
-    {
-      "id": "f23a16ed-78b6-423c-859b-99431cd63b1d",
+      "id": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309",
       "nodeId": "Melding",
       "type": "external",
       "inputs": {
@@ -250,7 +217,7 @@
         }
       },
       "position": {
-        "x": 2245,
+        "x": 1805,
         "y": 45
       },
       "width": 320,
@@ -258,13 +225,13 @@
       "descriptionManual": true
     },
     {
-      "id": "5aa6c0d5-c766-4126-93b5-8ab364bd64a6",
+      "id": "2c82708e-32fa-461e-aa66-0259cf3bff16",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
         "body": {
           "type": "auto",
-          "value": "Opgeslagen: {{Bewaar.record}}"
+          "value": "Aanvraag van {{Lees.output.naam}} voor {{Vraag.data.Bedrag}} is gemeld in Slack."
         },
         "statusCode": {
           "type": "literal",
@@ -272,7 +239,7 @@
         }
       },
       "position": {
-        "x": 2685,
+        "x": 2245,
         "y": 45
       },
       "width": 320,
@@ -282,28 +249,24 @@
   ],
   "edges": [
     {
-      "source": "92b14d6c-afb0-4b78-924a-d4b41b66c9b8",
-      "target": "f2cd9691-d2b7-4743-93d4-5dae7e77947e"
+      "source": "9cfe8d16-906d-45cb-8d28-fd43f99d685e",
+      "target": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe"
     },
     {
-      "source": "f2cd9691-d2b7-4743-93d4-5dae7e77947e",
-      "target": "b96af810-44ee-48ee-9056-eba068e11570"
+      "source": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe",
+      "target": "63b09a29-62b7-471f-b0d0-64ec34126bb0"
     },
     {
-      "source": "b96af810-44ee-48ee-9056-eba068e11570",
-      "target": "2b921790-893e-482f-bb62-09646a59f83f"
+      "source": "63b09a29-62b7-471f-b0d0-64ec34126bb0",
+      "target": "19139b7e-895e-4909-80c2-3354a39d17d3"
     },
     {
-      "source": "2b921790-893e-482f-bb62-09646a59f83f",
-      "target": "751573d1-5f95-4978-a6fb-e3bdea8bb81d"
+      "source": "19139b7e-895e-4909-80c2-3354a39d17d3",
+      "target": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309"
     },
     {
-      "source": "751573d1-5f95-4978-a6fb-e3bdea8bb81d",
-      "target": "f23a16ed-78b6-423c-859b-99431cd63b1d"
-    },
-    {
-      "source": "f23a16ed-78b6-423c-859b-99431cd63b1d",
-      "target": "5aa6c0d5-c766-4126-93b5-8ab364bd64a6"
+      "source": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309",
+      "target": "2c82708e-32fa-461e-aa66-0259cf3bff16"
     }
   ],
   "subworkflows": {}

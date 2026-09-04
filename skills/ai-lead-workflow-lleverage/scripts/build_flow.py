@@ -26,7 +26,6 @@ Plan-formaat (JSON):
     {"naam": "Slack", "soort": "slack", "tekst": "..."},
     {"naam": "Haal_Op", "soort": "http", "url": "...", "methode": "GET"},
     {"naam": "Lees_Tekst", "soort": "extract", "bron": "Form.data.Tekst", "uitvoer": {"naam": "string"}},
-    {"naam": "Bewaar", "soort": "tabel_schrijven", "tabel": "leads", "data": {"naam": "{{Lees_Tekst.output.naam}}"}},
     {"naam": "Klaar", "soort": "output", "tekst": "..."}
   ]
 }
@@ -215,19 +214,13 @@ class Bouwer:
             if s.get("body") is not None: inputs["body"] = lit(s["body"]); inputs["contentType"] = lit("application/json")
             if s.get("auth"): inputs["authorization"] = auto(s["auth"])
             return self.node(naam, "httpRequest", inputs, f"HTTP-call. Antwoord onder {{{{{naam}.data}}}}. Secrets via {{{{_env.NAAM}}}}.", rij)
-        if soort == "tabel_schrijven":
-            if not isinstance(s.get("data"), dict): raise PlanFout(f"{naam}: 'data' moet een object zijn, bv. {{\"naam\": \"{{{{Lees.output.naam}}}}\"}}")
-            self.meldingen.append(f"{naam}: maak na import de tabel '{s['tabel']}' aan en kies hem in de node.")
-            return self.node(naam, "dataTablesCreate", {"projectId": lit(KIES), "tableId": lit(KIES), "tableName": lit(s["tabel"]), "data": lit(s["data"])},
-                             f"Rij schrijven in Lleverage-tabel '{s['tabel']}'. KIES NA IMPORT: project + tabel.", rij)
-        if soort == "tabel_lezen":
-            self.meldingen.append(f"{naam}: kies na import de tabel '{s['tabel']}'.")
-            return self.node(naam, "dataTablesFind", {"projectId": lit(KIES), "tableId": lit(KIES), "tableName": lit(s["tabel"]), "returnMode": lit(s.get("modus", "all"))},
-                             f"Rijen lezen uit '{s['tabel']}'. Uitvoer onder {{{{{naam}.record}}}}. KIES NA IMPORT: tabel + filters.", rij)
+        if soort in ("tabel_schrijven", "tabel_lezen"):
+            raise PlanFout(f"{naam}: Lleverage-tabellen zitten nog niet in het script (data-veld niet bewezen, T4/T4b 4 sep). "
+                           "Zet hier voorlopig een 'output' met wat er opgeslagen zou worden, of gebruik 'http' naar een eigen API.")
         if soort == "output":
             if not isinstance(s.get("tekst"), str): raise PlanFout(f"{naam}: 'tekst' moet een tekst zijn")
             return self.node(naam, "output", {"body": auto(s["tekst"]), "statusCode": lit(200)}, "Eindpunt: dit zie je in de run.", rij)
-        raise PlanFout(f"{naam}: onbekende soort '{soort}'. Kies uit llm, extract, js, branch, mens_vraag, mens_keur, mail_sturen, mail_beantwoorden, slack, http, tabel_schrijven, tabel_lezen, output")
+        raise PlanFout(f"{naam}: onbekende soort '{soort}'. Kies uit llm, extract, js, branch, mens_vraag, mens_keur, mail_sturen, mail_beantwoorden, slack, http, output")
 
     def bouw(self):
         if not isinstance(self.plan, dict): raise PlanFout("het plan moet een JSON-object zijn")

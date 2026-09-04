@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "e54d8c51-597b-4119-a7cf-3058d6312b4b",
+      "id": "c94eeb1f-5345-4221-af7c-1eda0587f5a8",
       "nodeId": "Mailbox",
       "type": "integrationV2Trigger",
       "inputs": {
@@ -65,19 +65,19 @@
       "descriptionManual": true
     },
     {
-      "id": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c",
+      "id": "f7736f0d-00d4-4d25-9cf8-107054f88bc8",
       "nodeId": "Lees_Mail",
       "type": "llm",
       "inputs": {
         "_activeVariantId": {
           "type": "literal",
-          "value": "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea"
+          "value": "c52bf856-8aa0-4ab7-bd5d-8987fe2463be"
         },
         "_variants": {
           "type": "literal",
           "value": {
-            "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea": {
-              "id": "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea",
+            "c52bf856-8aa0-4ab7-bd5d-8987fe2463be": {
+              "id": "c52bf856-8aa0-4ab7-bd5d-8987fe2463be",
               "title": "Variant 1",
               "maxSteps": 1,
               "temperature": 0,
@@ -146,7 +146,7 @@
       "descriptionManual": true
     },
     {
-      "id": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6",
+      "id": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea",
       "nodeId": "Check",
       "type": "javascript",
       "inputs": {
@@ -164,7 +164,7 @@
       "descriptionManual": true
     },
     {
-      "id": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
+      "id": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
       "nodeId": "Splits",
       "type": "branch",
       "inputs": {
@@ -196,7 +196,7 @@
       "descriptionManual": true
     },
     {
-      "id": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
+      "id": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
       "nodeId": "Keur",
       "type": "requestApproval",
       "inputs": {
@@ -241,7 +241,7 @@
       "descriptionManual": true
     },
     {
-      "id": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
+      "id": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
       "nodeId": "Antwoord",
       "type": "external",
       "inputs": {
@@ -303,7 +303,7 @@
       "descriptionManual": true
     },
     {
-      "id": "ebdd8898-c2cd-4b9a-9b3a-b42fd5734b49",
+      "id": "43b12241-3327-498c-a716-9115aaa24115",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -325,7 +325,7 @@
       "descriptionManual": true
     },
     {
-      "id": "888db506-80fc-432b-9ed9-3d63613d8d3a",
+      "id": "9896ca3a-2b33-4331-aeb4-6c993083e410",
       "nodeId": "Afgekeurd",
       "type": "output",
       "inputs": {
@@ -347,7 +347,7 @@
       "descriptionManual": true
     },
     {
-      "id": "42e8f9a6-38ea-4adc-9320-956645e7c1b8",
+      "id": "876e8aff-9f4a-4c5c-a7b0-e932cefd7290",
       "nodeId": "Geen_Order",
       "type": "output",
       "inputs": {
@@ -371,39 +371,39 @@
   ],
   "edges": [
     {
-      "source": "e54d8c51-597b-4119-a7cf-3058d6312b4b",
-      "target": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c"
+      "source": "c94eeb1f-5345-4221-af7c-1eda0587f5a8",
+      "target": "f7736f0d-00d4-4d25-9cf8-107054f88bc8"
     },
     {
-      "source": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c",
-      "target": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6"
+      "source": "f7736f0d-00d4-4d25-9cf8-107054f88bc8",
+      "target": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea"
     },
     {
-      "source": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6",
-      "target": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3"
+      "source": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea",
+      "target": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e"
     },
     {
-      "source": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
-      "target": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
+      "source": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
+      "target": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
       "condition": "Splits.index === 0"
     },
     {
-      "source": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
-      "target": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
+      "source": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
+      "target": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
       "condition": "Keur.index === 0"
     },
     {
-      "source": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
-      "target": "ebdd8898-c2cd-4b9a-9b3a-b42fd5734b49"
+      "source": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
+      "target": "43b12241-3327-498c-a716-9115aaa24115"
     },
     {
-      "source": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
-      "target": "888db506-80fc-432b-9ed9-3d63613d8d3a",
+      "source": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
+      "target": "9896ca3a-2b33-4331-aeb4-6c993083e410",
       "condition": "Keur.index === 1"
     },
     {
-      "source": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
-      "target": "42e8f9a6-38ea-4adc-9320-956645e7c1b8",
+      "source": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
+      "target": "876e8aff-9f4a-4c5c-a7b0-e932cefd7290",
       "condition": "Splits.index === 1"
     }
   ],
