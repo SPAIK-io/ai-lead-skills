@@ -16,7 +16,7 @@ loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in pr
 | `extract` | `extract`; geeft ook `.confidence` en `.missingFields` | bewezen (T1, 4 sep) |
 | `js` | `javascript` | bewezen |
 | `branch` | `branch` | bewezen |
-| `mens_vraag` | `requestInput` | gezien; zelfde taakmechanisme als mens_keur |
+| `mens_vraag` | `requestInput`; default uit vorige stap werkt; Assignees na import kiezen; antwoord onder `.data.<veld>` | bewezen (T2, 4 sep) |
 | `mens_keur` | `requestApproval`; Assignees na import zelf kiezen (vorm: `[{"type":"user","value":"user_..."}]`, een Lleverage-gebruikers-id die alleen de editor kent); uitvoer `.index`, `.selectedValue`, `.selectedLabel`, `.resolvedBy` | bewezen (T3, 4 sep) |
 | `mail_sturen` | `external` microsoft-outlook_send-email | bewezen |
 | `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen in productie (2.21 t/m 2.28); T7 niet gedraaid: de testmailbox is gedeeld met andere flows |

@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "c94eeb1f-5345-4221-af7c-1eda0587f5a8",
+      "id": "185c4de4-1b69-464f-b05f-468d6bdce032",
       "nodeId": "Mailbox",
       "type": "integrationV2Trigger",
       "inputs": {
@@ -65,19 +65,19 @@
       "descriptionManual": true
     },
     {
-      "id": "f7736f0d-00d4-4d25-9cf8-107054f88bc8",
+      "id": "a02102e3-5774-40c0-87f4-0cf0f0dc15c1",
       "nodeId": "Lees_Mail",
       "type": "llm",
       "inputs": {
         "_activeVariantId": {
           "type": "literal",
-          "value": "c52bf856-8aa0-4ab7-bd5d-8987fe2463be"
+          "value": "af8b7d98-bdb9-41ca-81e7-585db32ef0a2"
         },
         "_variants": {
           "type": "literal",
           "value": {
-            "c52bf856-8aa0-4ab7-bd5d-8987fe2463be": {
-              "id": "c52bf856-8aa0-4ab7-bd5d-8987fe2463be",
+            "af8b7d98-bdb9-41ca-81e7-585db32ef0a2": {
+              "id": "af8b7d98-bdb9-41ca-81e7-585db32ef0a2",
               "title": "Variant 1",
               "maxSteps": 1,
               "temperature": 0,
@@ -146,7 +146,7 @@
       "descriptionManual": true
     },
     {
-      "id": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea",
+      "id": "65817faa-f818-470e-b7c5-9f32cd5dad26",
       "nodeId": "Check",
       "type": "javascript",
       "inputs": {
@@ -164,7 +164,7 @@
       "descriptionManual": true
     },
     {
-      "id": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
+      "id": "14cdaaab-258d-406f-b991-c702977027c5",
       "nodeId": "Splits",
       "type": "branch",
       "inputs": {
@@ -196,7 +196,7 @@
       "descriptionManual": true
     },
     {
-      "id": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
+      "id": "6d461c62-b1c5-44c6-bf51-05cfa1f050fb",
       "nodeId": "Keur",
       "type": "requestApproval",
       "inputs": {
@@ -241,7 +241,7 @@
       "descriptionManual": true
     },
     {
-      "id": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
+      "id": "83de505e-ffe3-457f-a55d-3ba6bb53d8de",
       "nodeId": "Antwoord",
       "type": "external",
       "inputs": {
@@ -303,7 +303,7 @@
       "descriptionManual": true
     },
     {
-      "id": "43b12241-3327-498c-a716-9115aaa24115",
+      "id": "1f85cab1-b047-4134-a280-d44b1e3a6c51",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -325,7 +325,7 @@
       "descriptionManual": true
     },
     {
-      "id": "9896ca3a-2b33-4331-aeb4-6c993083e410",
+      "id": "b526b301-cf72-4c2a-97d0-c9a8cce30c72",
       "nodeId": "Afgekeurd",
       "type": "output",
       "inputs": {
@@ -347,7 +347,7 @@
       "descriptionManual": true
     },
     {
-      "id": "876e8aff-9f4a-4c5c-a7b0-e932cefd7290",
+      "id": "2a3214b8-c254-4cfd-8aab-65a1e09d6be8",
       "nodeId": "Geen_Order",
       "type": "output",
       "inputs": {
@@ -371,39 +371,39 @@
   ],
   "edges": [
     {
-      "source": "c94eeb1f-5345-4221-af7c-1eda0587f5a8",
-      "target": "f7736f0d-00d4-4d25-9cf8-107054f88bc8"
+      "source": "185c4de4-1b69-464f-b05f-468d6bdce032",
+      "target": "a02102e3-5774-40c0-87f4-0cf0f0dc15c1"
     },
     {
-      "source": "f7736f0d-00d4-4d25-9cf8-107054f88bc8",
-      "target": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea"
+      "source": "a02102e3-5774-40c0-87f4-0cf0f0dc15c1",
+      "target": "65817faa-f818-470e-b7c5-9f32cd5dad26"
     },
     {
-      "source": "6e6b2963-e5af-4f47-8cc9-e6260f0f07ea",
-      "target": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e"
+      "source": "65817faa-f818-470e-b7c5-9f32cd5dad26",
+      "target": "14cdaaab-258d-406f-b991-c702977027c5"
     },
     {
-      "source": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
-      "target": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
+      "source": "14cdaaab-258d-406f-b991-c702977027c5",
+      "target": "6d461c62-b1c5-44c6-bf51-05cfa1f050fb",
       "condition": "Splits.index === 0"
     },
     {
-      "source": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
-      "target": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
+      "source": "6d461c62-b1c5-44c6-bf51-05cfa1f050fb",
+      "target": "83de505e-ffe3-457f-a55d-3ba6bb53d8de",
       "condition": "Keur.index === 0"
     },
     {
-      "source": "ca735723-37f2-4af4-b5a4-e7b426b1b2ad",
-      "target": "43b12241-3327-498c-a716-9115aaa24115"
+      "source": "83de505e-ffe3-457f-a55d-3ba6bb53d8de",
+      "target": "1f85cab1-b047-4134-a280-d44b1e3a6c51"
     },
     {
-      "source": "ccf5ad9f-f49e-4ba4-9490-8e4c1c7879e6",
-      "target": "9896ca3a-2b33-4331-aeb4-6c993083e410",
+      "source": "6d461c62-b1c5-44c6-bf51-05cfa1f050fb",
+      "target": "b526b301-cf72-4c2a-97d0-c9a8cce30c72",
       "condition": "Keur.index === 1"
     },
     {
-      "source": "8dcbe0f4-8921-4237-a4e1-bfa71d0c785e",
-      "target": "876e8aff-9f4a-4c5c-a7b0-e932cefd7290",
+      "source": "14cdaaab-258d-406f-b991-c702977027c5",
+      "target": "2a3214b8-c254-4cfd-8aab-65a1e09d6be8",
       "condition": "Splits.index === 1"
     }
   ],

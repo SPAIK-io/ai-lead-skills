@@ -178,8 +178,8 @@ class Bouwer:
                 if k not in sch["properties"]: raise PlanFout(f"{naam}: default voor '{k}' maar dat veld staat niet in 'velden'")
                 sch["properties"][k]["default"] = d
             return self.node(naam, "requestInput", {"type": lit("INPUT"), "title": lit(s.get("titel", "Even checken")),
-                             "subject": auto(s.get("onderwerp", s.get("titel", "Even checken"))), "description": auto(s.get("uitleg", "")),
-                             "schema": lit(sch), "uiSchema": lit({"ui:order": list(velden), "ui:groups": [{"key": "keuze", "label": "Jouw antwoord"}],
+                             "subject": auto(s.get("onderwerp", s.get("titel", "Even checken"))),
+                             "schema": lit(sch), "uiSchema": lit({"ui:order": list(velden), "ui:groups": [{"key": "keuze", "label": "Jouw antwoord", "description": s.get("uitleg", "")}],
                                                                   **{k: {"ui:group": "keuze", "ui:label": k} for k in velden}})},
                              f"KIES NA IMPORT: Assignees (wie krijgt de taak). Mens vult aan; flow wacht. Antwoord onder {{{{{naam}.data.<veld>}}}}", rij)
         if soort == "mens_keur":

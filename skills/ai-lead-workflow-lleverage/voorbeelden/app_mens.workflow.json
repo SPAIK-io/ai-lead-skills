@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "9cfe8d16-906d-45cb-8d28-fd43f99d685e",
+      "id": "d48384f2-b11f-4a09-8ad4-ef52600b709e",
       "nodeId": "App",
       "type": "appTrigger",
       "inputs": {
@@ -29,7 +29,7 @@
       "descriptionManual": true
     },
     {
-      "id": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe",
+      "id": "bcf425e2-f9f8-4b6e-9611-4a3278b42949",
       "nodeId": "Form",
       "type": "form",
       "inputs": {
@@ -77,7 +77,7 @@
       "descriptionManual": true
     },
     {
-      "id": "63b09a29-62b7-471f-b0d0-64ec34126bb0",
+      "id": "342eb74f-7301-468b-b1f2-817027c1f875",
       "nodeId": "Lees",
       "type": "extract",
       "inputs": {
@@ -127,7 +127,7 @@
       "descriptionManual": true
     },
     {
-      "id": "19139b7e-895e-4909-80c2-3354a39d17d3",
+      "id": "647769bb-8b18-44ef-87f4-f5bf9416d2ee",
       "nodeId": "Vraag",
       "type": "requestInput",
       "inputs": {
@@ -142,10 +142,6 @@
         "subject": {
           "type": "auto",
           "value": "Klopt het bedrag?"
-        },
-        "description": {
-          "type": "auto",
-          "value": ""
         },
         "schema": {
           "type": "literal",
@@ -172,7 +168,8 @@
             "ui:groups": [
               {
                 "key": "keuze",
-                "label": "Jouw antwoord"
+                "label": "Jouw antwoord",
+                "description": ""
               }
             ],
             "Bedrag": {
@@ -191,7 +188,7 @@
       "descriptionManual": true
     },
     {
-      "id": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309",
+      "id": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4",
       "nodeId": "Melding",
       "type": "external",
       "inputs": {
@@ -225,7 +222,7 @@
       "descriptionManual": true
     },
     {
-      "id": "2c82708e-32fa-461e-aa66-0259cf3bff16",
+      "id": "ab1954f9-195e-404b-8eb4-35f30cee4326",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -249,24 +246,24 @@
   ],
   "edges": [
     {
-      "source": "9cfe8d16-906d-45cb-8d28-fd43f99d685e",
-      "target": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe"
+      "source": "d48384f2-b11f-4a09-8ad4-ef52600b709e",
+      "target": "bcf425e2-f9f8-4b6e-9611-4a3278b42949"
     },
     {
-      "source": "92e3fad4-83a9-4b1d-ae08-9fd09aa45efe",
-      "target": "63b09a29-62b7-471f-b0d0-64ec34126bb0"
+      "source": "bcf425e2-f9f8-4b6e-9611-4a3278b42949",
+      "target": "342eb74f-7301-468b-b1f2-817027c1f875"
     },
     {
-      "source": "63b09a29-62b7-471f-b0d0-64ec34126bb0",
-      "target": "19139b7e-895e-4909-80c2-3354a39d17d3"
+      "source": "342eb74f-7301-468b-b1f2-817027c1f875",
+      "target": "647769bb-8b18-44ef-87f4-f5bf9416d2ee"
     },
     {
-      "source": "19139b7e-895e-4909-80c2-3354a39d17d3",
-      "target": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309"
+      "source": "647769bb-8b18-44ef-87f4-f5bf9416d2ee",
+      "target": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4"
     },
     {
-      "source": "58e3ba18-b2c6-4d88-9bdc-d33ba772a309",
-      "target": "2c82708e-32fa-461e-aa66-0259cf3bff16"
+      "source": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4",
+      "target": "ab1954f9-195e-404b-8eb4-35f30cee4326"
     }
   ],
   "subworkflows": {}
