@@ -10,10 +10,10 @@ loopt een importsessie (testflows T1 t/m T7); tot die klaar is, zijn `.data`, `.
 |---|---|---|
 | trigger `mail` | `integrationV2Trigger` (Outlook, nieuwe mail); velden `.body` `.subject` `.from` `.files` | bewezen |
 | trigger `schedule` | `scheduleTrigger` | bewezen |
-| trigger `app` | `appTrigger` + `form` | gezien |
+| trigger `app` | `appTrigger` + `form` | bewezen (T1, 4 sep) |
 | trigger `api` | `apiCallTrigger` | gezien |
 | `llm` | `llm` met `_jsonOutput` | bewezen |
-| `extract` | `extract` | gezien |
+| `extract` | `extract`; geeft ook `.confidence` en `.missingFields` | bewezen (T1, 4 sep) |
 | `js` | `javascript` | bewezen |
 | `branch` | `branch` | bewezen |
 | `mens_vraag` | `requestInput` | gezien |
