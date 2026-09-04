@@ -172,6 +172,7 @@ class Bouwer:
             n["_takken"] = {k: i for i, k in enumerate(conds)}
             return n
         if soort == "mens_vraag":
+            self.meldingen.append(f"{naam}: kies na import wie de taak krijgt (Assignees in de node).")
             velden = s.get("velden") or {"Antwoord": "string"}
             sch = schema_van(velden)
             for k, d in (s.get("defaults") or {}).items():
@@ -181,13 +182,14 @@ class Bouwer:
                              "subject": auto(s.get("onderwerp", s.get("titel", "Even checken"))), "description": auto(s.get("uitleg", "")),
                              "schema": lit(sch), "uiSchema": lit({"ui:order": list(velden), "ui:groups": [{"key": "keuze", "label": "Jouw antwoord"}],
                                                                   **{k: {"ui:group": "keuze", "ui:label": k} for k in velden}})},
-                             f"Mens vult aan; flow wacht. Antwoord onder {{{{{naam}.data.<veld>}}}}", rij)
+                             f"KIES NA IMPORT: Assignees (wie krijgt de taak). Mens vult aan; flow wacht. Antwoord onder {{{{{naam}.data.<veld>}}}}", rij)
         if soort == "mens_keur":
+            self.meldingen.append(f"{naam}: kies na import wie de taak krijgt (Assignees in de node).")
             n = self.node(naam, "requestApproval", {"type": lit("APPROVAL"), "title": auto(s.get("titel", "Goedkeuren?")),
                           "description": auto(s.get("uitleg", "")), "priority": lit("MEDIUM"),
                           "buttons": lit([{"label": s.get("goed", "Goedkeuren"), "value": "approve", "variant": "success"},
                                           {"label": s.get("fout", "Afkeuren"), "value": "reject", "variant": "destructive"}])},
-                          "Mens keurt goed (index 0) of af (index 1); flow wacht.", rij)
+                          "KIES NA IMPORT: Assignees (wie krijgt de taak). Mens keurt goed (index 0) of af (index 1); flow wacht.", rij)
             n["_takken"] = {"goed": 0, "fout": 1}
             return n
         if soort == "mail_sturen":

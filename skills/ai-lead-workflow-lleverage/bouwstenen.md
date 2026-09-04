@@ -17,7 +17,7 @@ loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in pr
 | `js` | `javascript` | bewezen |
 | `branch` | `branch` | bewezen |
 | `mens_vraag` | `requestInput` | gezien; zelfde taakmechanisme als mens_keur |
-| `mens_keur` | `requestApproval`; taak gaat naar de gebruiker die de run start; uitvoer `.index`, `.selectedValue`, `.selectedLabel`, `.resolvedBy` | bewezen (T3, 4 sep) |
+| `mens_keur` | `requestApproval`; Assignees na import zelf kiezen (anders krijgt niemand de taak); uitvoer `.index`, `.selectedValue`, `.selectedLabel`, `.resolvedBy` | bewezen (T3, 4 sep) |
 | `mail_sturen` | `external` microsoft-outlook_send-email | bewezen |
 | `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen in productie (2.21 t/m 2.28); T7 niet gedraaid: de testmailbox is gedeeld met andere flows |
 | `slack` | `external` slack_send-channel-message | bewezen |
@@ -29,7 +29,7 @@ Niet in het script: forEach met subworkflow, databaseQuery (eigen database via t
 PDF-naar-tekst, en alle andere integraties. Die komen erbij zodra ze bewezen zijn.
 
 Omgevingswaarden die het script niet kan weten en als `<KIES NA IMPORT>` achterlaat:
-connection-id's (Outlook, Slack), mailbox en map, tabel- en project-id's, Slack-kanaal.
+connection-id's (Outlook, Slack), mailbox en map, tabel- en project-id's, Slack-kanaal, en Assignees bij mens_vraag/mens_keur.
 Het model-id (46 = Claude Sonnet 4.6, 48 = GPT-5.4 mini) is per Lleverage-organisatie;
 klopt hij niet, dan kies je het model in de node opnieuw.
 

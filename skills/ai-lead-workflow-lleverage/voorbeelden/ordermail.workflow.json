@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "11b8e337-0b27-4e24-9a44-0908fff37217",
+      "id": "e54d8c51-597b-4119-a7cf-3058d6312b4b",
       "nodeId": "Mailbox",
       "type": "integrationV2Trigger",
       "inputs": {
@@ -65,19 +65,19 @@
       "descriptionManual": true
     },
     {
-      "id": "bc362174-7c06-47a5-bb5a-c673ca989145",
+      "id": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c",
       "nodeId": "Lees_Mail",
       "type": "llm",
       "inputs": {
         "_activeVariantId": {
           "type": "literal",
-          "value": "11f7a83a-6f92-4d2a-9527-1f95d69c56e5"
+          "value": "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea"
         },
         "_variants": {
           "type": "literal",
           "value": {
-            "11f7a83a-6f92-4d2a-9527-1f95d69c56e5": {
-              "id": "11f7a83a-6f92-4d2a-9527-1f95d69c56e5",
+            "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea": {
+              "id": "f2e0eb97-a8f4-4dcf-a137-16f9f6c2a6ea",
               "title": "Variant 1",
               "maxSteps": 1,
               "temperature": 0,
@@ -146,7 +146,7 @@
       "descriptionManual": true
     },
     {
-      "id": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919",
+      "id": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6",
       "nodeId": "Check",
       "type": "javascript",
       "inputs": {
@@ -164,7 +164,7 @@
       "descriptionManual": true
     },
     {
-      "id": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
+      "id": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
       "nodeId": "Splits",
       "type": "branch",
       "inputs": {
@@ -196,7 +196,7 @@
       "descriptionManual": true
     },
     {
-      "id": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
+      "id": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
       "nodeId": "Keur",
       "type": "requestApproval",
       "inputs": {
@@ -237,11 +237,11 @@
         "y": 45
       },
       "width": 320,
-      "description": "Mens keurt goed (index 0) of af (index 1); flow wacht.",
+      "description": "KIES NA IMPORT: Assignees (wie krijgt de taak). Mens keurt goed (index 0) of af (index 1); flow wacht.",
       "descriptionManual": true
     },
     {
-      "id": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
+      "id": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
       "nodeId": "Antwoord",
       "type": "external",
       "inputs": {
@@ -303,7 +303,7 @@
       "descriptionManual": true
     },
     {
-      "id": "e39dee09-92ea-49cc-ad3f-d88967e14fad",
+      "id": "ebdd8898-c2cd-4b9a-9b3a-b42fd5734b49",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -325,7 +325,7 @@
       "descriptionManual": true
     },
     {
-      "id": "2a56aa98-1241-409b-8909-78ecf353c181",
+      "id": "888db506-80fc-432b-9ed9-3d63613d8d3a",
       "nodeId": "Afgekeurd",
       "type": "output",
       "inputs": {
@@ -347,7 +347,7 @@
       "descriptionManual": true
     },
     {
-      "id": "5ac48b93-4fb0-41c6-b72f-1f8e184ae0c3",
+      "id": "42e8f9a6-38ea-4adc-9320-956645e7c1b8",
       "nodeId": "Geen_Order",
       "type": "output",
       "inputs": {
@@ -371,39 +371,39 @@
   ],
   "edges": [
     {
-      "source": "11b8e337-0b27-4e24-9a44-0908fff37217",
-      "target": "bc362174-7c06-47a5-bb5a-c673ca989145"
+      "source": "e54d8c51-597b-4119-a7cf-3058d6312b4b",
+      "target": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c"
     },
     {
-      "source": "bc362174-7c06-47a5-bb5a-c673ca989145",
-      "target": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919"
+      "source": "f89e4e9d-31b6-4a78-95e4-b3ea8fa05c1c",
+      "target": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6"
     },
     {
-      "source": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919",
-      "target": "e1663fd1-ea53-4a75-8190-d086dbd49b1e"
+      "source": "ac4ed3b4-d774-4dbd-9875-652c6c1b48e6",
+      "target": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3"
     },
     {
-      "source": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
-      "target": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
+      "source": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
+      "target": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
       "condition": "Splits.index === 0"
     },
     {
-      "source": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
-      "target": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
+      "source": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
+      "target": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
       "condition": "Keur.index === 0"
     },
     {
-      "source": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
-      "target": "e39dee09-92ea-49cc-ad3f-d88967e14fad"
+      "source": "5b8d47a3-47da-4d8b-99a7-9cba738f5a4c",
+      "target": "ebdd8898-c2cd-4b9a-9b3a-b42fd5734b49"
     },
     {
-      "source": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
-      "target": "2a56aa98-1241-409b-8909-78ecf353c181",
+      "source": "0dfbf70d-351b-49ab-a0f0-3466e639333d",
+      "target": "888db506-80fc-432b-9ed9-3d63613d8d3a",
       "condition": "Keur.index === 1"
     },
     {
-      "source": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
-      "target": "5ac48b93-4fb0-41c6-b72f-1f8e184ae0c3",
+      "source": "9f85dd9d-fea7-4133-a0bd-f00ee5be27e3",
+      "target": "42e8f9a6-38ea-4adc-9320-956645e7c1b8",
       "condition": "Splits.index === 1"
     }
   ],

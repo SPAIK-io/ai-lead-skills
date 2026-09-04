@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "6c070c00-5acd-40f6-a5df-7b99c91792fa",
+      "id": "92b14d6c-afb0-4b78-924a-d4b41b66c9b8",
       "nodeId": "App",
       "type": "appTrigger",
       "inputs": {
@@ -29,7 +29,7 @@
       "descriptionManual": true
     },
     {
-      "id": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9",
+      "id": "f2cd9691-d2b7-4743-93d4-5dae7e77947e",
       "nodeId": "Form",
       "type": "form",
       "inputs": {
@@ -77,7 +77,7 @@
       "descriptionManual": true
     },
     {
-      "id": "0d1cbf12-f7a3-468f-8b22-a78e179806a4",
+      "id": "b96af810-44ee-48ee-9056-eba068e11570",
       "nodeId": "Lees",
       "type": "extract",
       "inputs": {
@@ -127,7 +127,7 @@
       "descriptionManual": true
     },
     {
-      "id": "300348b6-44f5-4428-b49c-4ddb57406548",
+      "id": "2b921790-893e-482f-bb62-09646a59f83f",
       "nodeId": "Vraag",
       "type": "requestInput",
       "inputs": {
@@ -187,11 +187,11 @@
         "y": 45
       },
       "width": 320,
-      "description": "Mens vult aan; flow wacht. Antwoord onder {{Vraag.data.<veld>}}",
+      "description": "KIES NA IMPORT: Assignees (wie krijgt de taak). Mens vult aan; flow wacht. Antwoord onder {{Vraag.data.<veld>}}",
       "descriptionManual": true
     },
     {
-      "id": "c9b90824-ed3b-4603-b82d-aa4991266aae",
+      "id": "751573d1-5f95-4978-a6fb-e3bdea8bb81d",
       "nodeId": "Bewaar",
       "type": "dataTablesCreate",
       "inputs": {
@@ -224,7 +224,7 @@
       "descriptionManual": true
     },
     {
-      "id": "e36d995f-af23-4ebe-936a-2ec564f39b35",
+      "id": "f23a16ed-78b6-423c-859b-99431cd63b1d",
       "nodeId": "Melding",
       "type": "external",
       "inputs": {
@@ -258,7 +258,7 @@
       "descriptionManual": true
     },
     {
-      "id": "8f0bd3d8-4452-4467-841a-a55a9dae59a2",
+      "id": "5aa6c0d5-c766-4126-93b5-8ab364bd64a6",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -282,28 +282,28 @@
   ],
   "edges": [
     {
-      "source": "6c070c00-5acd-40f6-a5df-7b99c91792fa",
-      "target": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9"
+      "source": "92b14d6c-afb0-4b78-924a-d4b41b66c9b8",
+      "target": "f2cd9691-d2b7-4743-93d4-5dae7e77947e"
     },
     {
-      "source": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9",
-      "target": "0d1cbf12-f7a3-468f-8b22-a78e179806a4"
+      "source": "f2cd9691-d2b7-4743-93d4-5dae7e77947e",
+      "target": "b96af810-44ee-48ee-9056-eba068e11570"
     },
     {
-      "source": "0d1cbf12-f7a3-468f-8b22-a78e179806a4",
-      "target": "300348b6-44f5-4428-b49c-4ddb57406548"
+      "source": "b96af810-44ee-48ee-9056-eba068e11570",
+      "target": "2b921790-893e-482f-bb62-09646a59f83f"
     },
     {
-      "source": "300348b6-44f5-4428-b49c-4ddb57406548",
-      "target": "c9b90824-ed3b-4603-b82d-aa4991266aae"
+      "source": "2b921790-893e-482f-bb62-09646a59f83f",
+      "target": "751573d1-5f95-4978-a6fb-e3bdea8bb81d"
     },
     {
-      "source": "c9b90824-ed3b-4603-b82d-aa4991266aae",
-      "target": "e36d995f-af23-4ebe-936a-2ec564f39b35"
+      "source": "751573d1-5f95-4978-a6fb-e3bdea8bb81d",
+      "target": "f23a16ed-78b6-423c-859b-99431cd63b1d"
     },
     {
-      "source": "e36d995f-af23-4ebe-936a-2ec564f39b35",
-      "target": "8f0bd3d8-4452-4467-841a-a55a9dae59a2"
+      "source": "f23a16ed-78b6-423c-859b-99431cd63b1d",
+      "target": "5aa6c0d5-c766-4126-93b5-8ab364bd64a6"
     }
   ],
   "subworkflows": {}
