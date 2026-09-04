@@ -17,7 +17,7 @@ loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in pr
 | `js` | `javascript` | bewezen |
 | `branch` | `branch` | bewezen |
 | `mens_vraag` | `requestInput` | gezien; zelfde taakmechanisme als mens_keur |
-| `mens_keur` | `requestApproval`; Assignees na import zelf kiezen (anders krijgt niemand de taak); uitvoer `.index`, `.selectedValue`, `.selectedLabel`, `.resolvedBy` | bewezen (T3, 4 sep) |
+| `mens_keur` | `requestApproval`; Assignees na import zelf kiezen (vorm: `[{"type":"user","value":"user_..."}]`, een Lleverage-gebruikers-id die alleen de editor kent); uitvoer `.index`, `.selectedValue`, `.selectedLabel`, `.resolvedBy` | bewezen (T3, 4 sep) |
 | `mail_sturen` | `external` microsoft-outlook_send-email | bewezen |
 | `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen in productie (2.21 t/m 2.28); T7 niet gedraaid: de testmailbox is gedeeld met andere flows |
 | `slack` | `external` slack_send-channel-message | bewezen |
@@ -37,3 +37,6 @@ Mailflow van een lead: altijd op een EIGEN map in de gedeelde backupmailbox (bv.
 <NAAM>`), met een Outlook-regel die alleen mail van de afzenders van die lead in die map zet.
 De trigger van de flow staat op die map. Zo vuurt een testmail nooit een andere flow af en
 andersom. Nooit een trigger op de Inbox of op een bestaande map van een andere flow.
+
+Round-trip bewezen (T3, 4 sep): een door het script gebouwde flow komt na import en run
+ongewijzigd terug uit de export, op de door de gebruiker gekozen Assignees na.
