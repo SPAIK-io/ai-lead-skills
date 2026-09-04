@@ -22,7 +22,7 @@ loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in pr
 | `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen in productie (2.21 t/m 2.28); T7 niet gedraaid: de testmailbox is gedeeld met andere flows |
 | `slack` | `external` slack_send-channel-message | bewezen |
 | `http` | `httpRequest` | bewezen |
-| (tabellen) | `dataTablesCreate` / `dataTablesFind` | UIT het script: create schrijft wel, maar sjabloon in literal-object blijft letterlijk (T4) en `{{Js.result}}` als data geeft "Data must be an object or a reference to an object" (T4b). Later uitzoeken |
+| (tabellen) | `dataTablesCreate` / `dataTablesFind` | UIT het script: create schrijft wel, maar sjabloon in literal-object blijft letterlijk (T4) `{{Js.result}}` als data geeft "Data must be an object or a reference to an object" (T4b), en een auto-object importeert niet ("invalid data", T4c). Later uitzoeken met eigen Lleverage-toegang |
 | `output` | `output` | bewezen |
 
 Niet in het script: forEach met subworkflow, databaseQuery (eigen database via tunnel),

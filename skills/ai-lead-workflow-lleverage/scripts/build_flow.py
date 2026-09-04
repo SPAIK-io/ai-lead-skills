@@ -50,7 +50,10 @@ OUTLOOK_BASE = "https://actions.lleverage.ai/nodes"
 
 
 def lit(v): return {"type": "literal", "value": v}
-def auto(v): return {"type": "auto", "value": v}
+def auto(v):
+    # Een auto-input mag alleen tekst zijn: een object erin maakt de export onimporteerbaar (T4c, 4 sep).
+    if not isinstance(v, str): raise PlanFout(f"interne fout: auto-input met een {type(v).__name__} in plaats van tekst")
+    return {"type": "auto", "value": v}
 
 
 class PlanFout(Exception): pass
@@ -283,6 +286,10 @@ def valideer(wf):
     if len(set(ids)) != len(ids): p.append("dubbele node-id")
     raw = json.dumps(wf, ensure_ascii=False)
     if "\x00" in raw: p.append("null-byte in export")
+    for n in wf["nodes"]:
+        for k, v in n["inputs"].items():
+            if isinstance(v, dict) and v.get("type") == "auto" and not isinstance(v.get("value"), str):
+                p.append(f"{n['nodeId']}.{k}: auto-input moet tekst zijn (object maakt de export onimporteerbaar)")
     for e in wf["edges"]:
         if e["source"] not in ids or e["target"] not in ids: p.append(f"edge naar onbekende node: {e}")
     for ref in sorted(set(re.findall(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\.", raw))):
