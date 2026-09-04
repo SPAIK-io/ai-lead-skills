@@ -3,7 +3,7 @@
   "trigger": {"soort": "mail", "mailbox": "orders@voorbeeld.nl", "map": "AI TEST"},
   "stappen": [
     {"naam": "Lees_Mail", "soort": "llm",
-     "prompt": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.data.subject}}\nMAIL:\n---\n{{Mailbox.data.body}}\n---",
+     "prompt": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.subject}}\nMAIL:\n---\n{{Mailbox.body}}\n---",
      "uitvoer": {"klant": "string", "leverdatum_letterlijk": "string?", "regels": "array", "is_order": "boolean"}},
     {"naam": "Check", "soort": "js", "script": "const o = Lees_Mail.output; return {ok: o.is_order === true && o.regels.length > 0, aantal: o.regels.length};"},
     {"naam": "Splits", "soort": "branch", "condities": {"order": "Check.result.ok === true", "geen_order": "Check.result.ok === false"}},

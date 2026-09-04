@@ -3,12 +3,12 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "n-mailbox",
+      "id": "11b8e337-0b27-4e24-9a44-0908fff37217",
       "nodeId": "Mailbox",
       "type": "integrationV2Trigger",
       "inputs": {
         "folder": {
-          "type": "auto",
+          "type": "literal",
           "value": "AI TEST"
         },
         "appName": {
@@ -44,7 +44,14 @@
           "value": {
             "selectedApp": {
               "name": "Microsoft Outlook",
-              "img_src": "/images/integrations/microsoft-outlook.png"
+              "img_src": "/images/integrations/microsoft-outlook.png",
+              "name_slug": "microsoft-outlook",
+              "triggers": [
+                {
+                  "label": "Outlook: New Email Received",
+                  "value": "new-email-received"
+                }
+              ]
             }
           }
         }
@@ -54,23 +61,23 @@
         "y": 45
       },
       "width": 320,
-      "description": "KIES NA IMPORT: mailbox, map, connection. Vuurt bij elke nieuwe mail in die map. Gebruik {{Mailbox.data.subject}}, {{Mailbox.data.body}}, {{Mailbox.files}}.",
+      "description": "KIES NA IMPORT: mailbox, map, connection. Vuurt bij elke nieuwe mail in die map. Gebruik {{Mailbox.subject}}, {{Mailbox.body}}, {{Mailbox.from}}, {{Mailbox.files}}.",
       "descriptionManual": true
     },
     {
-      "id": "n-lees-mail",
+      "id": "bc362174-7c06-47a5-bb5a-c673ca989145",
       "nodeId": "Lees_Mail",
       "type": "llm",
       "inputs": {
         "_activeVariantId": {
           "type": "literal",
-          "value": "a3913b72-bce3-43f5-8f1c-9ffae4e9a635"
+          "value": "11f7a83a-6f92-4d2a-9527-1f95d69c56e5"
         },
         "_variants": {
           "type": "literal",
           "value": {
-            "a3913b72-bce3-43f5-8f1c-9ffae4e9a635": {
-              "id": "a3913b72-bce3-43f5-8f1c-9ffae4e9a635",
+            "11f7a83a-6f92-4d2a-9527-1f95d69c56e5": {
+              "id": "11f7a83a-6f92-4d2a-9527-1f95d69c56e5",
               "title": "Variant 1",
               "maxSteps": 1,
               "temperature": 0,
@@ -84,7 +91,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.data.subject}}\nMAIL:\n---\n{{Mailbox.data.body}}\n---"
+                      "text": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.subject}}\nMAIL:\n---\n{{Mailbox.body}}\n---"
                     }
                   ]
                 }
@@ -139,7 +146,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-check",
+      "id": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919",
       "nodeId": "Check",
       "type": "javascript",
       "inputs": {
@@ -157,7 +164,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-splits",
+      "id": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
       "nodeId": "Splits",
       "type": "branch",
       "inputs": {
@@ -189,7 +196,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-keur",
+      "id": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
       "nodeId": "Keur",
       "type": "requestApproval",
       "inputs": {
@@ -234,7 +241,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-antwoord",
+      "id": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
       "nodeId": "Antwoord",
       "type": "external",
       "inputs": {
@@ -256,11 +263,11 @@
         },
         "messageId": {
           "type": "auto",
-          "value": "{{Mailbox.data.id}}"
+          "value": "{{Mailbox.body.id}}"
         },
         "recipients": {
           "type": "auto",
-          "value": "{{Mailbox.data.from}}"
+          "value": "{{Mailbox.from}}"
         },
         "comment": {
           "type": "auto",
@@ -296,7 +303,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-klaar",
+      "id": "e39dee09-92ea-49cc-ad3f-d88967e14fad",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -318,7 +325,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-afgekeurd",
+      "id": "2a56aa98-1241-409b-8909-78ecf353c181",
       "nodeId": "Afgekeurd",
       "type": "output",
       "inputs": {
@@ -340,7 +347,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-geen-order",
+      "id": "5ac48b93-4fb0-41c6-b72f-1f8e184ae0c3",
       "nodeId": "Geen_Order",
       "type": "output",
       "inputs": {
@@ -364,39 +371,39 @@
   ],
   "edges": [
     {
-      "source": "n-mailbox",
-      "target": "n-lees-mail"
+      "source": "11b8e337-0b27-4e24-9a44-0908fff37217",
+      "target": "bc362174-7c06-47a5-bb5a-c673ca989145"
     },
     {
-      "source": "n-lees-mail",
-      "target": "n-check"
+      "source": "bc362174-7c06-47a5-bb5a-c673ca989145",
+      "target": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919"
     },
     {
-      "source": "n-check",
-      "target": "n-splits"
+      "source": "cc7d7e45-bcc4-4f77-be4c-28fa03e0f919",
+      "target": "e1663fd1-ea53-4a75-8190-d086dbd49b1e"
     },
     {
-      "source": "n-splits",
-      "target": "n-keur",
+      "source": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
+      "target": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
       "condition": "Splits.index === 0"
     },
     {
-      "source": "n-keur",
-      "target": "n-antwoord",
+      "source": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
+      "target": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
       "condition": "Keur.index === 0"
     },
     {
-      "source": "n-antwoord",
-      "target": "n-klaar"
+      "source": "2a4acac7-d99c-4c4b-b16b-e4fae598066f",
+      "target": "e39dee09-92ea-49cc-ad3f-d88967e14fad"
     },
     {
-      "source": "n-keur",
-      "target": "n-afgekeurd",
+      "source": "943d9ada-cdc6-4d9c-b0f8-b97a72deeecd",
+      "target": "2a56aa98-1241-409b-8909-78ecf353c181",
       "condition": "Keur.index === 1"
     },
     {
-      "source": "n-splits",
-      "target": "n-geen-order",
+      "source": "e1663fd1-ea53-4a75-8190-d086dbd49b1e",
+      "target": "5ac48b93-4fb0-41c6-b72f-1f8e184ae0c3",
       "condition": "Splits.index === 1"
     }
   ],

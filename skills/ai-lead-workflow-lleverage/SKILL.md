@@ -7,7 +7,7 @@ description: >-
   zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van procesmap
   naar flow", "eerste prototype", "lleverage json".
 metadata:
-  version: "0.1"
+  version: "0.2"
   last_updated: "2026-09-04"
 ---
 
@@ -18,8 +18,9 @@ skill maakt daar een werkend eerste prototype van: een bestand dat je in Llevera
 en meteen kunt draaien. Niet het eindproduct, wel iets waar je een echt gesprek over kunt
 voeren met de mensen die het straks gebruiken.
 
-De skill doet het denken samen met jou en laat het typen aan een script over. Daardoor is
-de JSON altijd geldig, of hij komt helemaal niet.
+De skill doet het denken samen met jou en laat het typen aan een script over. Het script
+controleert de structuur (verwijzingen, takken, eindpunten) en weigert een plan dat niet klopt.
+Of Lleverage elke bouwsteen precies zo accepteert, staat per bouwsteen in `bouwstenen.md`.
 
 ---
 
@@ -58,8 +59,32 @@ Vijf tot tien stappen. Elke stap krijgt een korte naam (letters en underscores, 
 | `tabel_schrijven` / `tabel_lezen` | Rij in een Lleverage-tabel schrijven of lezen | `{{Naam.record}}` |
 | `output` | Eindpunt: wat je in de run ziet | |
 
-Triggers: `mail` (nieuwe mail in een map), `app` (formulier met velden), `schedule` (vaste
-tijden) of `api` (een ander systeem klopt aan).
+Triggers: `mail` (nieuwe mail in een map; velden `mailbox`, `map`), `app` (formulier; `velden`),
+`schedule` (vaste tijden; `cron`) of `api` (een ander systeem klopt aan; `velden`).
+
+Wat elke soort nodig heeft:
+
+| Soort | Verplicht | Optioneel |
+|---|---|---|
+| `llm` | `prompt` | `uitvoer` (velden met type) |
+| `extract` | `bron` (zonder accolades, bv. `Form.data.Tekst`), `uitvoer` | |
+| `js` | `script` | |
+| `branch` | `condities` (tak: expressie, zonder accolades) | |
+| `mens_vraag` | `velden` | `titel`, `onderwerp`, `uitleg`, `defaults` |
+| `mens_keur` | | `titel`, `uitleg`, `goed`, `fout` (knopteksten) |
+| `mail_sturen` | `aan`, `onderwerp`, `tekst` | `van` |
+| `mail_beantwoorden` | `tekst` | `aan` |
+| `slack` | `tekst` | `kanaal` |
+| `http` | `url` | `methode`, `body`, `auth` |
+| `tabel_schrijven` | `tabel`, `data` (object) | |
+| `tabel_lezen` | `tabel` | `modus` (`first` of `all`) |
+| `output` | `tekst` | |
+
+Typen voor `uitvoer` en `velden`: `string`, `number`, `boolean`, `array`, en `string?` als het
+leeg mag zijn. Namen van stappen en velden: letters, cijfers, underscore, beginnend met een letter.
+
+Wat de mail-trigger geeft: `{{Mailbox.subject}}`, `{{Mailbox.body}}`, `{{Mailbox.from}}`,
+`{{Mailbox.files}}`. Het formulier: `{{Form.data.<veld>}}`.
 
 Regels voor het plannetje:
 
@@ -91,7 +116,8 @@ python3 scripts/build_flow.py plan.json > <naam>.workflow.json
 Het script zegt één van drie dingen:
 
 - **`OK: n nodes`** plus regels die beginnen met `NA IMPORT:`. Die regels zijn de checklist
-  voor de AI lead, zie stap 3.
+  voor de AI lead, zie stap 3. Staat er `LET OP: geen mens in deze flow`, bespreek dat dan
+  expliciet met de AI lead.
 - **`PLAN-FOUT: ...`** Het plan vraagt iets wat het script niet kent, of mist iets. Los het
   op in het plan, niet in de JSON.
 - **`FOUT: ...`** Structuurfout: een verwijzing naar een stap die niet bestaat, een tak die
@@ -101,8 +127,9 @@ Schrijf nooit zelf JSON en pas nooit de uitvoer van het script met de hand aan. 
 iets niet, dan klopt het plan niet, of het script mist een bouwsteen. In dat laatste geval
 zeg je dat eerlijk en lever je dat deel als beschrijving in plaats van als JSON.
 
-Kan Claude hier geen Python draaien, geef dan het plan-JSON en de opdracht om het script te
-draaien mee aan de AI lead; het script staat in de plugin.
+Gebruik je Claude in claude.ai zonder terminal, dan kan het script daar meestal gewoon draaien
+(Claude voert Python uit). Lukt dat niet, bewaar dan het plan als `plan.json` en vraag je duo
+of Brahma om het script te draaien; dat kost een minuut. Schrijf de JSON niet met de hand.
 
 ---
 
@@ -126,7 +153,8 @@ paneel, niet in het bovenste.
 
 ## Wat niet kan, en wat je dan doet
 
-De bouwstenen in de tabel zijn de bouwstenen die bewezen werken. Andere koppelingen (Teams,
+De bouwstenen in de tabel zijn de bouwstenen die we kennen. Een deel is in productie bewezen,
+een deel alleen in een testflow gezien; welke wat is staat in `bouwstenen.md`. Andere koppelingen (Teams,
 SharePoint, Excel, een ERP) zitten er niet in. Vraagt het plan daar toch om, dan:
 
 - zeg je dat die stap niet als JSON meekomt,

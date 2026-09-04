@@ -1,12 +1,14 @@
 # Bouwstenen die het script kent
 
-Elke bouwsteen is geoogst uit een export die in Lleverage heeft gedraaid. Status:
-**bewezen** = in productie of live-getest, **gezien** = uit een geïmporteerde export, nog
-niet door ons in een echte run bewezen.
+Elke bouwsteen is geoogst uit een export die uit Lleverage kwam. Status:
+**bewezen** = in productie of live-getest, **gezien** = de vorm komt uit een export die ooit
+in Lleverage stond, maar wij hebben hem nog niet zelf geïmporteerd en gedraaid. Voor "gezien"
+loopt een importsessie (testflows T1 t/m T7); tot die klaar is, zijn `.data`, `.record` en
+`.index` bij die bouwstenen aannames.
 
 | plan-soort | Lleverage-node | status |
 |---|---|---|
-| trigger `mail` | `integrationV2Trigger` (Outlook, nieuwe mail) | bewezen |
+| trigger `mail` | `integrationV2Trigger` (Outlook, nieuwe mail); velden `.body` `.subject` `.from` `.files` | bewezen |
 | trigger `schedule` | `scheduleTrigger` | bewezen |
 | trigger `app` | `appTrigger` + `form` | gezien |
 | trigger `api` | `apiCallTrigger` | gezien |
@@ -17,7 +19,7 @@ niet door ons in een echte run bewezen.
 | `mens_vraag` | `requestInput` | gezien |
 | `mens_keur` | `requestApproval` | gezien |
 | `mail_sturen` | `external` microsoft-outlook_send-email | bewezen |
-| `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email | bewezen |
+| `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen (2.21 t/m 2.28), T7 test opnieuw |
 | `slack` | `external` slack_send-channel-message | bewezen |
 | `http` | `httpRequest` | bewezen |
 | `tabel_schrijven` / `tabel_lezen` | `dataTablesCreate` / `dataTablesFind` | gezien |

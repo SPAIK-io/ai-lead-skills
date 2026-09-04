@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "n-app",
+      "id": "6c070c00-5acd-40f6-a5df-7b99c91792fa",
       "nodeId": "App",
       "type": "appTrigger",
       "inputs": {
@@ -29,7 +29,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-form",
+      "id": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9",
       "nodeId": "Form",
       "type": "form",
       "inputs": {
@@ -77,7 +77,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-lees",
+      "id": "0d1cbf12-f7a3-468f-8b22-a78e179806a4",
       "nodeId": "Lees",
       "type": "extract",
       "inputs": {
@@ -95,7 +95,6 @@
               "naam",
               "bedrag"
             ],
-            "additionalProperties": false,
             "properties": {
               "naam": {
                 "type": "string"
@@ -128,7 +127,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-vraag",
+      "id": "300348b6-44f5-4428-b49c-4ddb57406548",
       "nodeId": "Vraag",
       "type": "requestInput",
       "inputs": {
@@ -192,7 +191,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-bewaar",
+      "id": "c9b90824-ed3b-4603-b82d-aa4991266aae",
       "nodeId": "Bewaar",
       "type": "dataTablesCreate",
       "inputs": {
@@ -225,7 +224,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-melding",
+      "id": "e36d995f-af23-4ebe-936a-2ec564f39b35",
       "nodeId": "Melding",
       "type": "external",
       "inputs": {
@@ -259,7 +258,7 @@
       "descriptionManual": true
     },
     {
-      "id": "n-klaar",
+      "id": "8f0bd3d8-4452-4467-841a-a55a9dae59a2",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -283,28 +282,28 @@
   ],
   "edges": [
     {
-      "source": "n-app",
-      "target": "n-form"
+      "source": "6c070c00-5acd-40f6-a5df-7b99c91792fa",
+      "target": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9"
     },
     {
-      "source": "n-form",
-      "target": "n-lees"
+      "source": "fea768b9-009a-4ce1-9f9b-0ec8d8a0b6f9",
+      "target": "0d1cbf12-f7a3-468f-8b22-a78e179806a4"
     },
     {
-      "source": "n-lees",
-      "target": "n-vraag"
+      "source": "0d1cbf12-f7a3-468f-8b22-a78e179806a4",
+      "target": "300348b6-44f5-4428-b49c-4ddb57406548"
     },
     {
-      "source": "n-vraag",
-      "target": "n-bewaar"
+      "source": "300348b6-44f5-4428-b49c-4ddb57406548",
+      "target": "c9b90824-ed3b-4603-b82d-aa4991266aae"
     },
     {
-      "source": "n-bewaar",
-      "target": "n-melding"
+      "source": "c9b90824-ed3b-4603-b82d-aa4991266aae",
+      "target": "e36d995f-af23-4ebe-936a-2ec564f39b35"
     },
     {
-      "source": "n-melding",
-      "target": "n-klaar"
+      "source": "e36d995f-af23-4ebe-936a-2ec564f39b35",
+      "target": "8f0bd3d8-4452-4467-841a-a55a9dae59a2"
     }
   ],
   "subworkflows": {}

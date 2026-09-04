@@ -15,7 +15,7 @@ Plan-formaat (JSON):
               "velden": {"Tekst": "uitleg"}          (alleen app / api)
               "cron": "0 7 * * 1-5"}                  (alleen schedule)
   "stappen": [
-    {"naam": "Lees_Mail", "soort": "llm", "prompt": "...{{Mailbox.data.body}}...",
+    {"naam": "Lees_Mail", "soort": "llm", "prompt": "...{{Mailbox.body}}...",
      "uitvoer": {"klant": "string", "regels": "array"}},
     {"naam": "Check", "soort": "js", "script": "return {ok: Lees_Mail.output.klant !== ''};"},
     {"naam": "Splits", "soort": "branch", "condities": {"ok": "Check.result.ok === true", "niet_ok": "Check.result.ok === false"}},
@@ -32,8 +32,15 @@ Plan-formaat (JSON):
 }
 Volgorde = lijstvolgorde, tenzij "na" iets anders zegt ("Stap" of "Branch.tak" of "Keur.goed"/"Keur.fout").
 Soorten uitvoer: "string", "number", "boolean", "array" (van objecten met vrije velden), "string?" (mag null).
+Veld- en stapnamen: letters, cijfers, underscore; beginnen met een letter.
+Mail-trigger geeft: {{Mailbox.subject}}, {{Mailbox.body}}, {{Mailbox.from}}, {{Mailbox.files}}.
 """
 import json, re, sys, uuid
+
+NAAM_RE = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
+GERESERVEERD = {"Mailbox", "App", "Form", "Schedule", "API_Call"}
+ACCESSOR = {"javascript": "result", "llm": "output", "extract": "output", "httpRequest": "data", "requestInput": "data",
+            "dataTablesCreate": "record", "dataTablesFind": "record", "integrationV2Trigger": None, "form": "data", "apiCallTrigger": "body"}
 
 X0, XSTEP, Y, YSTEP = 45, 440, 45, 300
 KIES = "<KIES NA IMPORT>"
@@ -54,6 +61,8 @@ def schema_van(velden):
     """{"klant": "string", "regels": "array", "datum": "string?"} -> JSON-schema."""
     props, req = {}, []
     for k, t in (velden or {}).items():
+        if not NAAM_RE.fullmatch(k):
+            raise PlanFout(f"veldnaam '{k}' mag alleen letters, cijfers en _ bevatten en moet met een letter beginnen")
         if isinstance(t, dict):
             props[k] = t; req.append(k); continue
         optional = t.endswith("?"); t = t.rstrip("?")
@@ -80,10 +89,12 @@ class Bouwer:
         self.col = 0
 
     def node(self, naam, type_, inputs, desc, rij=0, width=320):
-        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", naam):
-            raise PlanFout(f"stapnaam '{naam}' mag alleen letters, cijfers en _ bevatten (refs werken op de naam)")
+        if not NAAM_RE.fullmatch(naam):
+            raise PlanFout(f"stapnaam '{naam}' mag alleen letters, cijfers en _ bevatten en moet met een letter beginnen (refs werken op de naam)")
+        if naam in self.namen and naam in GERESERVEERD and self.col > 0:
+            raise PlanFout(f"'{naam}' is een gereserveerde naam (de trigger heet zo); kies een andere stapnaam")
         if naam in self.namen: raise PlanFout(f"stapnaam '{naam}' komt twee keer voor")
-        n = {"id": "n-" + re.sub(r"[^a-z0-9]+", "-", naam.lower()), "nodeId": naam, "type": type_,
+        n = {"id": str(uuid.uuid4()), "nodeId": naam, "type": type_,
              "inputs": inputs, "position": {"x": X0 + XSTEP * self.col, "y": Y + YSTEP * rij},
              "width": width, "description": desc, "descriptionManual": True}
         self.col += 1
@@ -102,12 +113,13 @@ class Bouwer:
         if soort == "mail":
             self.meldingen.append("Mailbox: kies na import de mailbox, de map en de Outlook-connection.")
             return self.node("Mailbox", "integrationV2Trigger", {
-                "folder": auto(t.get("map", "Inbox")), "appName": auto("microsoft-outlook"),
+                "folder": lit(t.get("map", "inbox")), "appName": auto("microsoft-outlook"),
                 "accountId": lit(KIES), "targetUser": auto(t.get("mailbox", KIES)),
                 "componentKey": auto("new-email-received"), "includeAttachmentsEnabled": auto("true"),
                 "senderFilterMode": auto("BLACKLIST"), "senderFilterAddresses": auto(t.get("mailbox", KIES)),
-                "configuredProps": lit({"selectedApp": {"name": "Microsoft Outlook", "img_src": "/images/integrations/microsoft-outlook.png"}})},
-                "KIES NA IMPORT: mailbox, map, connection. Vuurt bij elke nieuwe mail in die map. Gebruik {{Mailbox.data.subject}}, {{Mailbox.data.body}}, {{Mailbox.files}}.")
+                "configuredProps": lit({"selectedApp": {"name": "Microsoft Outlook", "img_src": "/images/integrations/microsoft-outlook.png", "name_slug": "microsoft-outlook",
+                                        "triggers": [{"label": "Outlook: New Email Received", "value": "new-email-received"}]}})},
+                "KIES NA IMPORT: mailbox, map, connection. Vuurt bij elke nieuwe mail in die map. Gebruik {{Mailbox.subject}}, {{Mailbox.body}}, {{Mailbox.from}}, {{Mailbox.files}}.")
         if soort == "app":
             velden = t.get("velden") or {"Tekst": "Plak hier je tekst"}
             a = self.node("App", "appTrigger", {"visibility": auto("Private"),
@@ -137,10 +149,13 @@ class Bouwer:
                 inputs["_jsonFormat"] = lit(True); inputs["_jsonOutput"] = lit(schema_van(s["uitvoer"]))
                 desc = f"LLM. Uitvoer onder {{{{{naam}.output.<veld>}}}}: " + ", ".join(s["uitvoer"])
             else:
+                inputs["_jsonFormat"] = lit(False)
                 desc = f"LLM. Tekst onder {{{{{naam}.output}}}}"
             return self.node(naam, "llm", inputs, desc, rij)
         if soort == "extract":
-            return self.node(naam, "extract", {"variables": lit([s["bron"]]), "schema": lit(schema_van(s["uitvoer"])), **{k: lit(v) for k, v in EXTRACT_MODEL.items()}},
+            if "{{" in s["bron"]: raise PlanFout(f"{naam}: 'bron' zonder accolades, bv. Form.data.Tekst")
+            sch = schema_van(s["uitvoer"]); sch.pop("additionalProperties", None)
+            return self.node(naam, "extract", {"variables": lit([s["bron"]]), "schema": lit(sch), **{k: lit(v) for k, v in EXTRACT_MODEL.items()}},
                              f"Extractie uit {s['bron']}. Uitvoer onder {{{{{naam}.output.<veld>}}}}. CONTROLEER NA IMPORT: model.", rij)
         if soort == "js":
             if "{{" in s["script"]: raise PlanFout(f"{naam}: geen {{{{ }}}} in een script; gebruik de node-naam direct, bv. Lees_Mail.output.klant")
@@ -149,6 +164,9 @@ class Bouwer:
         if soort == "branch":
             conds = s["condities"]
             if not isinstance(conds, dict) or not conds: raise PlanFout(f"{naam}: condities moet een dict zijn {{tak: expressie}}")
+            for tak, expr in conds.items():
+                if not NAAM_RE.fullmatch(tak): raise PlanFout(f"{naam}: takna(a)m '{tak}' mag alleen letters, cijfers en _ bevatten")
+                if not isinstance(expr, str) or "{{" in expr: raise PlanFout(f"{naam}: conditie van tak '{tak}' zonder accolades, bv. Check.result.ok === true")
             n = self.node(naam, "branch", {"conditions": lit(list(conds.values())), "useLanguageMode": lit(False), "languageConditions": lit([""] * len(conds))},
                           "Vertakking. Takken: " + ", ".join(f"{k} (index {i})" for i, k in enumerate(conds)), rij)
             n["_takken"] = {k: i for i, k in enumerate(conds)}
@@ -156,7 +174,9 @@ class Bouwer:
         if soort == "mens_vraag":
             velden = s.get("velden") or {"Antwoord": "string"}
             sch = schema_van(velden)
-            for k, d in (s.get("defaults") or {}).items(): sch["properties"][k]["default"] = d
+            for k, d in (s.get("defaults") or {}).items():
+                if k not in sch["properties"]: raise PlanFout(f"{naam}: default voor '{k}' maar dat veld staat niet in 'velden'")
+                sch["properties"][k]["default"] = d
             return self.node(naam, "requestInput", {"type": lit("INPUT"), "title": lit(s.get("titel", "Even checken")),
                              "subject": auto(s.get("onderwerp", s.get("titel", "Even checken"))), "description": auto(s.get("uitleg", "")),
                              "schema": lit(sch), "uiSchema": lit({"ui:order": list(velden), "ui:groups": [{"key": "keuze", "label": "Jouw antwoord"}],
@@ -180,8 +200,8 @@ class Bouwer:
             if "Mailbox" not in self.namen: raise PlanFout(f"{naam}: mail_beantwoorden kan alleen met trigger.soort = mail")
             self.meldingen.append(f"{naam}: kies na import de Outlook-connection.")
             return self.node(naam, "external", {"_baseUrl": lit(OUTLOOK_BASE), "_nodeKey": lit("microsoft-outlook_reply-to-email"), "credentialId": lit(KIES),
-                             "targetUser": auto(self.plan["trigger"].get("mailbox", KIES)), "messageId": auto("{{Mailbox.data.id}}"),
-                             "recipients": auto(s.get("aan", "{{Mailbox.data.from}}")), "comment": auto(s["tekst"]),
+                             "targetUser": auto(self.plan["trigger"].get("mailbox", KIES)), "messageId": auto("{{Mailbox.body.id}}"),
+                             "recipients": auto(s.get("aan", "{{Mailbox.from}}")), "comment": auto(s["tekst"]),
                              "commentType": lit("HTML" if "<" in s["tekst"] else "Text"), "replyAll": lit(False), "timezone": auto("Europe/Amsterdam"),
                              "__retryOptions": lit(RETRY)}, "Antwoord op de binnengekomen mail. KIES NA IMPORT: connection.", rij)
         if soort == "slack":
@@ -194,6 +214,7 @@ class Bouwer:
             if s.get("auth"): inputs["authorization"] = auto(s["auth"])
             return self.node(naam, "httpRequest", inputs, f"HTTP-call. Antwoord onder {{{{{naam}.data}}}}. Secrets via {{{{_env.NAAM}}}}.", rij)
         if soort == "tabel_schrijven":
+            if not isinstance(s.get("data"), dict): raise PlanFout(f"{naam}: 'data' moet een object zijn, bv. {{\"naam\": \"{{{{Lees.output.naam}}}}\"}}")
             self.meldingen.append(f"{naam}: maak na import de tabel '{s['tabel']}' aan en kies hem in de node.")
             return self.node(naam, "dataTablesCreate", {"projectId": lit(KIES), "tableId": lit(KIES), "tableName": lit(s["tabel"]), "data": lit(s["data"])},
                              f"Rij schrijven in Lleverage-tabel '{s['tabel']}'. KIES NA IMPORT: project + tabel.", rij)
@@ -202,13 +223,21 @@ class Bouwer:
             return self.node(naam, "dataTablesFind", {"projectId": lit(KIES), "tableId": lit(KIES), "tableName": lit(s["tabel"]), "returnMode": lit(s.get("modus", "all"))},
                              f"Rijen lezen uit '{s['tabel']}'. Uitvoer onder {{{{{naam}.record}}}}. KIES NA IMPORT: tabel + filters.", rij)
         if soort == "output":
+            if not isinstance(s.get("tekst"), str): raise PlanFout(f"{naam}: 'tekst' moet een tekst zijn")
             return self.node(naam, "output", {"body": auto(s["tekst"]), "statusCode": lit(200)}, "Eindpunt: dit zie je in de run.", rij)
         raise PlanFout(f"{naam}: onbekende soort '{soort}'. Kies uit llm, extract, js, branch, mens_vraag, mens_keur, mail_sturen, mail_beantwoorden, slack, http, tabel_schrijven, tabel_lezen, output")
 
     def bouw(self):
+        if not isinstance(self.plan, dict): raise PlanFout("het plan moet een JSON-object zijn")
+        if not isinstance(self.plan.get("trigger"), dict): raise PlanFout("'trigger' moet een object zijn, bv. {\"soort\": \"mail\"}")
+        stappen = self.plan.get("stappen")
+        if not isinstance(stappen, list) or not stappen: raise PlanFout("'stappen' moet een lijst zijn met minstens één stap")
         vorige = self.trigger()
         rij = 0
-        for s in self.plan.get("stappen") or []:
+        gebruikt = {}
+        for s in stappen:
+            if not isinstance(s, dict): raise PlanFout(f"elke stap moet een object zijn, dit niet: {s!r}")
+            if vorige["type"] == "output" and not s.get("na"): raise PlanFout(f"{s.get('naam')}: komt na output '{vorige['nodeId']}'; een output is een eindpunt. Geef 'na' op of haal de output weg")
             n = self.stap(s, rij)
             bron, cond = vorige, None
             if s.get("na"):
@@ -219,20 +248,44 @@ class Bouwer:
                     if not b or "_takken" not in b: raise PlanFout(f"{s['naam']}: 'na' verwijst naar '{bnaam}' maar dat is geen branch of mens_keur")
                     if tak not in b["_takken"]: raise PlanFout(f"{s['naam']}: tak '{tak}' bestaat niet op {bnaam}; takken: {list(b['_takken'])}")
                     bron, cond = b, f"{bnaam}.index === {b['_takken'][tak]}"
+                    gebruikt.setdefault(bnaam, set()).add(tak)
                 else:
+                    if ref == s["naam"]: raise PlanFout(f"{s['naam']}: 'na' verwijst naar zichzelf")
+                    if ref == "App": raise PlanFout(f"{s['naam']}: 'na' kan niet naar 'App'; gebruik 'Form'")
                     bron = self.namen.get(ref)
-                    if not bron: raise PlanFout(f"{s['naam']}: 'na' verwijst naar onbekende stap '{ref}'")
+                    if not bron: raise PlanFout(f"{s['naam']}: 'na' verwijst naar onbekende stap '{ref}' (staat hij wel eerder in de lijst?)")
                     if "_takken" in bron: raise PlanFout(f"{s['naam']}: '{ref}' is een vertakking, kies een tak: {ref}.<tak>")
+                    if bron["type"] == "output": raise PlanFout(f"{s['naam']}: 'na' verwijst naar output '{ref}', maar een output is een eindpunt")
             elif "_takken" in vorige:
                 raise PlanFout(f"{s['naam']}: komt na vertakking '{vorige['nodeId']}', geef 'na': '{vorige['nodeId']}.<tak>' op")
             self.edge(bron, n, cond); vorige = n
-        for n in self.nodes: n.pop("_takken", None)
+        for n in self.nodes:
+            if "_takken" in n:
+                open_ = [t for t in n["_takken"] if t not in gebruikt.get(n["nodeId"], set())]
+                if open_: raise PlanFout(f"{n['nodeId']}: tak(ken) {open_} gaan nergens heen. Elke tak eindigt ergens, al is het een output")
+            n.pop("_takken", None)
+        if not any(n["type"] in ("requestInput", "requestApproval") for n in self.nodes):
+            self.meldingen.append("LET OP: geen mens in deze flow (mens_vraag/mens_keur). Bij een eerste versie wil je die bijna altijd.")
         return {"version": 15, "layoutMode": "free", "nodes": self.nodes, "edges": self.edges, "subworkflows": {}}
+
+
+def verwacht(t):
+    return {"integrationV2Trigger": "body/subject/from/files", "branch": "index", "requestApproval": "index",
+            "output": "-", "return": "-", "scheduleTrigger": "-", "appTrigger": "-", "external": "-"}.get(t) or ACCESSOR.get(t) or "?"
+
+
+def accessor_ok(t, acc):
+    if t == "integrationV2Trigger": return acc in ("body", "subject", "from", "files", "id")
+    if t in ("branch", "requestApproval"): return acc == "index"
+    if t in ("output", "return", "scheduleTrigger", "appTrigger", "external"): return False
+    return ACCESSOR.get(t) == acc
 
 
 def valideer(wf):
     p = []
-    ids = {n["id"] for n in wf["nodes"]}; namen = {n["nodeId"] for n in wf["nodes"]}
+    ids = [n["id"] for n in wf["nodes"]]; namen = {n["nodeId"] for n in wf["nodes"]}
+    bytype = {n["nodeId"]: n["type"] for n in wf["nodes"]}
+    if len(set(ids)) != len(ids): p.append("dubbele node-id")
     raw = json.dumps(wf, ensure_ascii=False)
     if "\x00" in raw: p.append("null-byte in export")
     for e in wf["edges"]:
@@ -247,8 +300,13 @@ def valideer(wf):
         elif n["type"] not in ("output", "return") and not uit:
             p.append(f"{n['nodeId']}: doodlopende stap (geen vervolg en geen output)")
         if n["type"] == "javascript":
-            for ref in set(re.findall(r"\b([A-Z][A-Za-z0-9_]*)\.(?:output|result|data|record|files)\b", n["inputs"]["script"]["value"])):
-                if ref not in namen: p.append(f"{n['nodeId']}: script gebruikt '{ref}' maar die stap bestaat niet")
+            for ref, acc in set(re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\.(output|result|data|record|files|body|subject|from)\b", n["inputs"]["script"]["value"])):
+                if ref in ("Math", "JSON", "Object", "Array", "String", "Number", "Date", "console", "_env"): continue
+                if ref not in namen: p.append(f"{n['nodeId']}: script gebruikt '{ref}.{acc}' maar die stap bestaat niet")
+                elif not accessor_ok(bytype[ref], acc): p.append(f"{n['nodeId']}: script gebruikt '{ref}.{acc}', maar {ref} geeft '.{verwacht(bytype[ref])}'")
+    for ref, acc in set(re.findall(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_]+)", raw)):
+        if ref in namen and not accessor_ok(bytype[ref], acc):
+            p.append(f"{{{{{ref}.{acc}}}}} klopt niet: {ref} geeft '.{verwacht(bytype[ref])}'")
     if sum(n["type"].endswith("Trigger") for n in wf["nodes"]) != 1: p.append("precies één trigger vereist")
     return p
 
