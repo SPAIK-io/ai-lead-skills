@@ -12,19 +12,20 @@ en één klein stuk dat je als eerste bouwt.
 
 ## Installeren
 
-**In Claude Code** (typ dit in Claude Code zelf, niet in je terminal):
+**De makkelijkste route, werkt op Mac en Windows:** open claude.ai, klik in het chatvenster op
+`+` > Add plugins > Add > Add from a repository, en plak
+`https://github.com/SPAIK-io/ai-lead-skills`. Zet de plugin aan. Gebruik je ook Claude Code op
+hetzelfde account, herstart die dan één keer: de skills staan er dan ook in.
+
+**Alleen Claude Code, zonder claude.ai** (typ dit in Claude Code zelf, niet in je terminal):
 
 ```
 /plugin marketplace add SPAIK-io/ai-lead-skills
 /plugin install ai-lead-skills@ai-lead
 ```
 
-Herstart Claude Code. Updates komen daarna vanzelf mee.
-
-**In claude.ai**: klik in het chatvenster op `+` > Add plugins > Add > Add from a repository,
-en plak `https://github.com/SPAIK-io/ai-lead-skills`.
-
 Daarna typ je gewoon "interview voorbereiden" of "procesmap maken" en pakt Claude de skill op.
+Updates komen vanzelf mee.
 
 ## Eigenaarschap en verbeteringen
 
