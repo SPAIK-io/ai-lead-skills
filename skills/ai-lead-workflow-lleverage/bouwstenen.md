@@ -33,5 +33,7 @@ connection-id's (Outlook, Slack), mailbox en map, tabel- en project-id's, Slack-
 Het model-id (46 = Claude Sonnet 4.6, 48 = GPT-5.4 mini) is per Lleverage-organisatie;
 klopt hij niet, dan kies je het model in de node opnieuw.
 
-Let op voor leads: een mailflow testen vereist een eigen testmailbox. De SIG-backupmailbox is
-gedeeld en heeft al triggers van andere flows; daar mag je geen testmail in zetten.
+Mailflow van een lead: altijd op een EIGEN map in de gedeelde backupmailbox (bv. `AI LEAD
+<NAAM>`), met een Outlook-regel die alleen mail van de afzenders van die lead in die map zet.
+De trigger van de flow staat op die map. Zo vuurt een testmail nooit een andere flow af en
+andersom. Nooit een trigger op de Inbox of op een bestaande map van een andere flow.

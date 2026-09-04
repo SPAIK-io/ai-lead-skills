@@ -94,6 +94,9 @@ Regels voor het plannetje:
   accolades: `Lees_Mail.output.klant`.
 - **Wat de mens moet zien, staat in de tekst van de stap.** Een `mens_keur` met alleen
   "Goedkeuren?" is nutteloos; zet erin wat er goedgekeurd wordt.
+- **Een mail-trigger staat op een eigen map**, met een Outlook-regel die alleen jouw
+  testafzenders daarin zet. Nooit op de Inbox of op een map waar al een flow op draait. Geef
+  in het plan de mapnaam op (`"map": "AI LEAD <NAAM>"`).
 - **Geheimen nooit in het plan.** Een API-sleutel gaat als `{{_env.NAAM}}` en wordt in
   Lleverage als secret gezet.
 
