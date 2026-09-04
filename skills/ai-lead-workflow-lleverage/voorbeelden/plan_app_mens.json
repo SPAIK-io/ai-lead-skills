@@ -28,6 +28,16 @@
       }
     },
     {
+      "naam": "Bewaar",
+      "soort": "tabel_schrijven",
+      "tabel": "aanvragen",
+      "data": {
+        "naam": "{{Lees.output.naam}}",
+        "bedrag": "{{Vraag.data.Bedrag}}",
+        "bron": "app"
+      }
+    },
+    {
       "naam": "Melding",
       "soort": "slack",
       "tekst": "Nieuwe aanvraag van {{Lees.output.naam}}: {{Vraag.data.Bedrag}}"

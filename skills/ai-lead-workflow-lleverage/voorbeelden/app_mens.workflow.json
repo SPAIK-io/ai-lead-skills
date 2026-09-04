@@ -3,7 +3,7 @@
   "layoutMode": "free",
   "nodes": [
     {
-      "id": "d48384f2-b11f-4a09-8ad4-ef52600b709e",
+      "id": "d3c81335-019b-46fc-93cf-cb4cac7d99a1",
       "nodeId": "App",
       "type": "appTrigger",
       "inputs": {
@@ -29,7 +29,7 @@
       "descriptionManual": true
     },
     {
-      "id": "bcf425e2-f9f8-4b6e-9611-4a3278b42949",
+      "id": "e7a9f908-cd6a-421c-8042-99ee21ba09b5",
       "nodeId": "Form",
       "type": "form",
       "inputs": {
@@ -77,7 +77,7 @@
       "descriptionManual": true
     },
     {
-      "id": "342eb74f-7301-468b-b1f2-817027c1f875",
+      "id": "afcc011f-2254-476c-a234-b005704f8e36",
       "nodeId": "Lees",
       "type": "extract",
       "inputs": {
@@ -127,7 +127,7 @@
       "descriptionManual": true
     },
     {
-      "id": "647769bb-8b18-44ef-87f4-f5bf9416d2ee",
+      "id": "089e8b89-9783-4825-95bc-19ebd07ba8ea",
       "nodeId": "Vraag",
       "type": "requestInput",
       "inputs": {
@@ -188,7 +188,50 @@
       "descriptionManual": true
     },
     {
-      "id": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4",
+      "id": "1dd12809-30dd-401b-9f79-10b8c8594fdd",
+      "nodeId": "Bewaar",
+      "type": "dataTablesCreate",
+      "inputs": {
+        "projectId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "tableId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "tableName": {
+          "type": "literal",
+          "value": "aanvragen"
+        },
+        "data": {
+          "type": "literal",
+          "value": {
+            "naam": {
+              "type": "auto",
+              "value": "{{Lees.output.naam}}"
+            },
+            "bedrag": {
+              "type": "auto",
+              "value": "{{Vraag.data.Bedrag}}"
+            },
+            "bron": {
+              "type": "literal",
+              "value": "app"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 1805,
+        "y": 45
+      },
+      "width": 320,
+      "description": "KIES NA IMPORT: project + tabel 'aanvragen'. Rij schrijven. Uitvoer onder {{Bewaar.record}}",
+      "descriptionManual": true
+    },
+    {
+      "id": "272334a8-48a0-4855-9663-2ca087baabdb",
       "nodeId": "Melding",
       "type": "external",
       "inputs": {
@@ -214,7 +257,7 @@
         }
       },
       "position": {
-        "x": 1805,
+        "x": 2245,
         "y": 45
       },
       "width": 320,
@@ -222,7 +265,7 @@
       "descriptionManual": true
     },
     {
-      "id": "ab1954f9-195e-404b-8eb4-35f30cee4326",
+      "id": "971d7c43-6147-4530-8060-01c817dad5c1",
       "nodeId": "Klaar",
       "type": "output",
       "inputs": {
@@ -236,7 +279,7 @@
         }
       },
       "position": {
-        "x": 2245,
+        "x": 2685,
         "y": 45
       },
       "width": 320,
@@ -246,24 +289,28 @@
   ],
   "edges": [
     {
-      "source": "d48384f2-b11f-4a09-8ad4-ef52600b709e",
-      "target": "bcf425e2-f9f8-4b6e-9611-4a3278b42949"
+      "source": "d3c81335-019b-46fc-93cf-cb4cac7d99a1",
+      "target": "e7a9f908-cd6a-421c-8042-99ee21ba09b5"
     },
     {
-      "source": "bcf425e2-f9f8-4b6e-9611-4a3278b42949",
-      "target": "342eb74f-7301-468b-b1f2-817027c1f875"
+      "source": "e7a9f908-cd6a-421c-8042-99ee21ba09b5",
+      "target": "afcc011f-2254-476c-a234-b005704f8e36"
     },
     {
-      "source": "342eb74f-7301-468b-b1f2-817027c1f875",
-      "target": "647769bb-8b18-44ef-87f4-f5bf9416d2ee"
+      "source": "afcc011f-2254-476c-a234-b005704f8e36",
+      "target": "089e8b89-9783-4825-95bc-19ebd07ba8ea"
     },
     {
-      "source": "647769bb-8b18-44ef-87f4-f5bf9416d2ee",
-      "target": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4"
+      "source": "089e8b89-9783-4825-95bc-19ebd07ba8ea",
+      "target": "1dd12809-30dd-401b-9f79-10b8c8594fdd"
     },
     {
-      "source": "2de387a2-a1dc-4e11-a86e-54c1d5d6f5a4",
-      "target": "ab1954f9-195e-404b-8eb4-35f30cee4326"
+      "source": "1dd12809-30dd-401b-9f79-10b8c8594fdd",
+      "target": "272334a8-48a0-4855-9663-2ca087baabdb"
+    },
+    {
+      "source": "272334a8-48a0-4855-9663-2ca087baabdb",
+      "target": "971d7c43-6147-4530-8060-01c817dad5c1"
     }
   ],
   "subworkflows": {}
