@@ -3,7 +3,7 @@
 Elke bouwsteen is geoogst uit een export die uit Lleverage kwam. Status:
 **bewezen** = in productie of live-getest, **gezien** = de vorm komt uit een export die ooit
 in Lleverage stond, maar wij hebben hem nog niet zelf geïmporteerd en gedraaid. Voor "gezien"
-loopt een importsessie (testflows T1 t/m T7); tot die klaar is, zijn `.data`, `.record` en
+loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in productie bewezen); tot die klaar is, zijn `.data`, `.record` en
 `.index` bij die bouwstenen aannames.
 
 | plan-soort | Lleverage-node | status |
@@ -19,7 +19,7 @@ loopt een importsessie (testflows T1 t/m T7); tot die klaar is, zijn `.data`, `.
 | `mens_vraag` | `requestInput` | gezien |
 | `mens_keur` | `requestApproval` | gezien |
 | `mail_sturen` | `external` microsoft-outlook_send-email | bewezen |
-| `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen (2.21 t/m 2.28), T7 test opnieuw |
+| `mail_beantwoorden` | `external` microsoft-outlook_reply-to-email; `messageId` = `{{Mailbox.body.id}}` | bewezen in productie (2.21 t/m 2.28); T7 niet gedraaid: de testmailbox is gedeeld met andere flows |
 | `slack` | `external` slack_send-channel-message | bewezen |
 | `http` | `httpRequest` | bewezen |
 | `tabel_schrijven` / `tabel_lezen` | `dataTablesCreate` / `dataTablesFind` | gezien |
@@ -32,3 +32,6 @@ Omgevingswaarden die het script niet kan weten en als `<KIES NA IMPORT>` achterl
 connection-id's (Outlook, Slack), mailbox en map, tabel- en project-id's, Slack-kanaal.
 Het model-id (46 = Claude Sonnet 4.6, 48 = GPT-5.4 mini) is per Lleverage-organisatie;
 klopt hij niet, dan kies je het model in de node opnieuw.
+
+Let op voor leads: een mailflow testen vereist een eigen testmailbox. De SIG-backupmailbox is
+gedeeld en heeft al triggers van andere flows; daar mag je geen testmail in zetten.
