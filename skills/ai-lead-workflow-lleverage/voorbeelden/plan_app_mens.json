@@ -1,0 +1,11 @@
+{
+  "naam": "Aanvraag beoordelen",
+  "trigger": {"soort": "app", "velden": {"Aanvraag": "Plak de aanvraag"}},
+  "stappen": [
+    {"naam": "Lees", "soort": "extract", "bron": "Form.data.Aanvraag", "uitvoer": {"naam": "string", "bedrag": "number"}},
+    {"naam": "Vraag", "soort": "mens_vraag", "titel": "Klopt het bedrag?", "velden": {"Bedrag": "number"}, "defaults": {"Bedrag": "{{Lees.output.bedrag}}"}},
+    {"naam": "Bewaar", "soort": "tabel_schrijven", "tabel": "aanvragen", "data": {"naam": "{{Lees.output.naam}}", "bedrag": "{{Vraag.data.Bedrag}}"}},
+    {"naam": "Melding", "soort": "slack", "tekst": "Nieuwe aanvraag van {{Lees.output.naam}}: {{Vraag.data.Bedrag}}"},
+    {"naam": "Klaar", "soort": "output", "tekst": "Opgeslagen: {{Bewaar.record}}"}
+  ]
+}

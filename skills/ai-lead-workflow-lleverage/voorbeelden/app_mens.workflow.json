@@ -1,0 +1,311 @@
+{
+  "version": 15,
+  "layoutMode": "free",
+  "nodes": [
+    {
+      "id": "n-app",
+      "nodeId": "App",
+      "type": "appTrigger",
+      "inputs": {
+        "visibility": {
+          "type": "auto",
+          "value": "Private"
+        },
+        "appConfig": {
+          "type": "literal",
+          "value": {
+            "heading": "Aanvraag beoordelen",
+            "intro": "",
+            "showTraces": true
+          }
+        }
+      },
+      "position": {
+        "x": 45,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Start via de app-knop in Lleverage.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-form",
+      "nodeId": "Form",
+      "type": "form",
+      "inputs": {
+        "schema": {
+          "type": "literal",
+          "value": {
+            "type": "object",
+            "required": [
+              "Aanvraag"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "Aanvraag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "uiSchema": {
+          "type": "literal",
+          "value": {
+            "ui:order": [
+              "Aanvraag"
+            ],
+            "ui:groups": [
+              {
+                "key": "invoer",
+                "label": "Invoer"
+              }
+            ],
+            "Aanvraag": {
+              "ui:group": "invoer",
+              "ui:widget": "textarea",
+              "ui:label": "Aanvraag"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 485,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Invoerformulier. Velden: {{Form.data.Aanvraag}}",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-lees",
+      "nodeId": "Lees",
+      "type": "extract",
+      "inputs": {
+        "variables": {
+          "type": "literal",
+          "value": [
+            "Form.data.Aanvraag"
+          ]
+        },
+        "schema": {
+          "type": "literal",
+          "value": {
+            "type": "object",
+            "required": [
+              "naam",
+              "bedrag"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "naam": {
+                "type": "string"
+              },
+              "bedrag": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "languageModelId": {
+          "type": "literal",
+          "value": 48
+        },
+        "modelName": {
+          "type": "literal",
+          "value": "openai/gpt-5.4-mini"
+        },
+        "providerName": {
+          "type": "literal",
+          "value": "OpenAI"
+        }
+      },
+      "position": {
+        "x": 925,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Extractie uit Form.data.Aanvraag. Uitvoer onder {{Lees.output.<veld>}}. CONTROLEER NA IMPORT: model.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-vraag",
+      "nodeId": "Vraag",
+      "type": "requestInput",
+      "inputs": {
+        "type": {
+          "type": "literal",
+          "value": "INPUT"
+        },
+        "title": {
+          "type": "literal",
+          "value": "Klopt het bedrag?"
+        },
+        "subject": {
+          "type": "auto",
+          "value": "Klopt het bedrag?"
+        },
+        "description": {
+          "type": "auto",
+          "value": ""
+        },
+        "schema": {
+          "type": "literal",
+          "value": {
+            "type": "object",
+            "required": [
+              "Bedrag"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "Bedrag": {
+                "type": "number",
+                "default": "{{Lees.output.bedrag}}"
+              }
+            }
+          }
+        },
+        "uiSchema": {
+          "type": "literal",
+          "value": {
+            "ui:order": [
+              "Bedrag"
+            ],
+            "ui:groups": [
+              {
+                "key": "keuze",
+                "label": "Jouw antwoord"
+              }
+            ],
+            "Bedrag": {
+              "ui:group": "keuze",
+              "ui:label": "Bedrag"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 1365,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Mens vult aan; flow wacht. Antwoord onder {{Vraag.data.<veld>}}",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-bewaar",
+      "nodeId": "Bewaar",
+      "type": "dataTablesCreate",
+      "inputs": {
+        "projectId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "tableId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "tableName": {
+          "type": "literal",
+          "value": "aanvragen"
+        },
+        "data": {
+          "type": "literal",
+          "value": {
+            "naam": "{{Lees.output.naam}}",
+            "bedrag": "{{Vraag.data.Bedrag}}"
+          }
+        }
+      },
+      "position": {
+        "x": 1805,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Rij schrijven in Lleverage-tabel 'aanvragen'. KIES NA IMPORT: project + tabel.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-melding",
+      "nodeId": "Melding",
+      "type": "external",
+      "inputs": {
+        "_baseUrl": {
+          "type": "literal",
+          "value": "https://actions.lleverage.ai/nodes"
+        },
+        "_nodeKey": {
+          "type": "literal",
+          "value": "slack_send-channel-message"
+        },
+        "credentialId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "channel": {
+          "type": "auto",
+          "value": "<KIES NA IMPORT>"
+        },
+        "text": {
+          "type": "auto",
+          "value": "Nieuwe aanvraag van {{Lees.output.naam}}: {{Vraag.data.Bedrag}}"
+        }
+      },
+      "position": {
+        "x": 2245,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Slack-bericht. KIES NA IMPORT: connection + kanaal.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-klaar",
+      "nodeId": "Klaar",
+      "type": "output",
+      "inputs": {
+        "body": {
+          "type": "auto",
+          "value": "Opgeslagen: {{Bewaar.record}}"
+        },
+        "statusCode": {
+          "type": "literal",
+          "value": 200
+        }
+      },
+      "position": {
+        "x": 2685,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Eindpunt: dit zie je in de run.",
+      "descriptionManual": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "n-app",
+      "target": "n-form"
+    },
+    {
+      "source": "n-form",
+      "target": "n-lees"
+    },
+    {
+      "source": "n-lees",
+      "target": "n-vraag"
+    },
+    {
+      "source": "n-vraag",
+      "target": "n-bewaar"
+    },
+    {
+      "source": "n-bewaar",
+      "target": "n-melding"
+    },
+    {
+      "source": "n-melding",
+      "target": "n-klaar"
+    }
+  ],
+  "subworkflows": {}
+}

@@ -8,7 +8,7 @@ en één klein stuk dat je als eerste bouwt.
 |---|---|---|
 | `ai-lead-interview` | Vooraf: doelzin, themaguide, vragen op maat, kaartje voor tijdens. Achteraf: transcript naar stappen, getallen, omwegen en gaten, plus terugkoppelbericht. | "interview voorbereiden", "transcript verwerken" |
 | `ai-lead-procesmap` | Interviewmateriaal naar de vier kolommen (stap, wie, hoe lang, wat gaat mis), gaten apart, waar zit de tijd en waar de frustratie. Met een invulbare HTML. | "procesmap maken" |
-| `ai-lead-workflow-lleverage` | In aanbouw. Van procesmap naar een eerste workflow die je in Lleverage kunt importeren. | "workflow maken" |
+| `ai-lead-workflow-lleverage` | Van procesmap en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Bèta. | "workflow maken", "bouw dit in Lleverage" |
 
 ## Installeren
 

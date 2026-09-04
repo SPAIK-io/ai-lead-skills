@@ -1,0 +1,404 @@
+{
+  "version": 15,
+  "layoutMode": "free",
+  "nodes": [
+    {
+      "id": "n-mailbox",
+      "nodeId": "Mailbox",
+      "type": "integrationV2Trigger",
+      "inputs": {
+        "folder": {
+          "type": "auto",
+          "value": "AI TEST"
+        },
+        "appName": {
+          "type": "auto",
+          "value": "microsoft-outlook"
+        },
+        "accountId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "targetUser": {
+          "type": "auto",
+          "value": "orders@voorbeeld.nl"
+        },
+        "componentKey": {
+          "type": "auto",
+          "value": "new-email-received"
+        },
+        "includeAttachmentsEnabled": {
+          "type": "auto",
+          "value": "true"
+        },
+        "senderFilterMode": {
+          "type": "auto",
+          "value": "BLACKLIST"
+        },
+        "senderFilterAddresses": {
+          "type": "auto",
+          "value": "orders@voorbeeld.nl"
+        },
+        "configuredProps": {
+          "type": "literal",
+          "value": {
+            "selectedApp": {
+              "name": "Microsoft Outlook",
+              "img_src": "/images/integrations/microsoft-outlook.png"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 45,
+        "y": 45
+      },
+      "width": 320,
+      "description": "KIES NA IMPORT: mailbox, map, connection. Vuurt bij elke nieuwe mail in die map. Gebruik {{Mailbox.data.subject}}, {{Mailbox.data.body}}, {{Mailbox.files}}.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-lees-mail",
+      "nodeId": "Lees_Mail",
+      "type": "llm",
+      "inputs": {
+        "_activeVariantId": {
+          "type": "literal",
+          "value": "a3913b72-bce3-43f5-8f1c-9ffae4e9a635"
+        },
+        "_variants": {
+          "type": "literal",
+          "value": {
+            "a3913b72-bce3-43f5-8f1c-9ffae4e9a635": {
+              "id": "a3913b72-bce3-43f5-8f1c-9ffae4e9a635",
+              "title": "Variant 1",
+              "maxSteps": 1,
+              "temperature": 0,
+              "systemMessage": "",
+              "languageModelId": 46,
+              "modelName": "anthropic/claude-sonnet-4.6",
+              "providerName": "Anthropic",
+              "messages": [
+                {
+                  "role": "user",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.data.subject}}\nMAIL:\n---\n{{Mailbox.data.body}}\n---"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "_jsonFormat": {
+          "type": "literal",
+          "value": true
+        },
+        "_jsonOutput": {
+          "type": "literal",
+          "value": {
+            "type": "object",
+            "required": [
+              "klant",
+              "regels",
+              "is_order"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "klant": {
+                "type": "string"
+              },
+              "leverdatum_letterlijk": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "regels": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "is_order": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 485,
+        "y": 45
+      },
+      "width": 320,
+      "description": "LLM. Uitvoer onder {{Lees_Mail.output.<veld>}}: klant, leverdatum_letterlijk, regels, is_order",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-check",
+      "nodeId": "Check",
+      "type": "javascript",
+      "inputs": {
+        "script": {
+          "type": "literal",
+          "value": "const o = Lees_Mail.output; return {ok: o.is_order === true && o.regels.length > 0, aantal: o.regels.length};"
+        }
+      },
+      "position": {
+        "x": 925,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Code. Uitvoer onder {{Check.result.<veld>}}",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-splits",
+      "nodeId": "Splits",
+      "type": "branch",
+      "inputs": {
+        "conditions": {
+          "type": "literal",
+          "value": [
+            "Check.result.ok === true",
+            "Check.result.ok === false"
+          ]
+        },
+        "useLanguageMode": {
+          "type": "literal",
+          "value": false
+        },
+        "languageConditions": {
+          "type": "literal",
+          "value": [
+            "",
+            ""
+          ]
+        }
+      },
+      "position": {
+        "x": 1365,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Vertakking. Takken: order (index 0), geen_order (index 1)",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-keur",
+      "nodeId": "Keur",
+      "type": "requestApproval",
+      "inputs": {
+        "type": {
+          "type": "literal",
+          "value": "APPROVAL"
+        },
+        "title": {
+          "type": "auto",
+          "value": "Order van {{Lees_Mail.output.klant}} goedkeuren?"
+        },
+        "description": {
+          "type": "auto",
+          "value": "{{Check.result.aantal}} regels, leverdatum {{Lees_Mail.output.leverdatum_letterlijk}}"
+        },
+        "priority": {
+          "type": "literal",
+          "value": "MEDIUM"
+        },
+        "buttons": {
+          "type": "literal",
+          "value": [
+            {
+              "label": "Goedkeuren",
+              "value": "approve",
+              "variant": "success"
+            },
+            {
+              "label": "Afkeuren",
+              "value": "reject",
+              "variant": "destructive"
+            }
+          ]
+        }
+      },
+      "position": {
+        "x": 1805,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Mens keurt goed (index 0) of af (index 1); flow wacht.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-antwoord",
+      "nodeId": "Antwoord",
+      "type": "external",
+      "inputs": {
+        "_baseUrl": {
+          "type": "literal",
+          "value": "https://actions.lleverage.ai/nodes"
+        },
+        "_nodeKey": {
+          "type": "literal",
+          "value": "microsoft-outlook_reply-to-email"
+        },
+        "credentialId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "targetUser": {
+          "type": "auto",
+          "value": "orders@voorbeeld.nl"
+        },
+        "messageId": {
+          "type": "auto",
+          "value": "{{Mailbox.data.id}}"
+        },
+        "recipients": {
+          "type": "auto",
+          "value": "{{Mailbox.data.from}}"
+        },
+        "comment": {
+          "type": "auto",
+          "value": "Bedankt, we hebben {{Check.result.aantal}} regels ontvangen."
+        },
+        "commentType": {
+          "type": "literal",
+          "value": "Text"
+        },
+        "replyAll": {
+          "type": "literal",
+          "value": false
+        },
+        "timezone": {
+          "type": "auto",
+          "value": "Europe/Amsterdam"
+        },
+        "__retryOptions": {
+          "type": "literal",
+          "value": {
+            "intervalMs": 1000,
+            "maxRetries": 2,
+            "onFailStrategy": "fail"
+          }
+        }
+      },
+      "position": {
+        "x": 2245,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Antwoord op de binnengekomen mail. KIES NA IMPORT: connection.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-klaar",
+      "nodeId": "Klaar",
+      "type": "output",
+      "inputs": {
+        "body": {
+          "type": "auto",
+          "value": "Order verwerkt: {{Lees_Mail.output.klant}}"
+        },
+        "statusCode": {
+          "type": "literal",
+          "value": 200
+        }
+      },
+      "position": {
+        "x": 2685,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Eindpunt: dit zie je in de run.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-afgekeurd",
+      "nodeId": "Afgekeurd",
+      "type": "output",
+      "inputs": {
+        "body": {
+          "type": "auto",
+          "value": "Afgekeurd door mens"
+        },
+        "statusCode": {
+          "type": "literal",
+          "value": 200
+        }
+      },
+      "position": {
+        "x": 3125,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Eindpunt: dit zie je in de run.",
+      "descriptionManual": true
+    },
+    {
+      "id": "n-geen-order",
+      "nodeId": "Geen_Order",
+      "type": "output",
+      "inputs": {
+        "body": {
+          "type": "auto",
+          "value": "Geen order: blijft liggen"
+        },
+        "statusCode": {
+          "type": "literal",
+          "value": 200
+        }
+      },
+      "position": {
+        "x": 3565,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Eindpunt: dit zie je in de run.",
+      "descriptionManual": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "n-mailbox",
+      "target": "n-lees-mail"
+    },
+    {
+      "source": "n-lees-mail",
+      "target": "n-check"
+    },
+    {
+      "source": "n-check",
+      "target": "n-splits"
+    },
+    {
+      "source": "n-splits",
+      "target": "n-keur",
+      "condition": "Splits.index === 0"
+    },
+    {
+      "source": "n-keur",
+      "target": "n-antwoord",
+      "condition": "Keur.index === 0"
+    },
+    {
+      "source": "n-antwoord",
+      "target": "n-klaar"
+    },
+    {
+      "source": "n-keur",
+      "target": "n-afgekeurd",
+      "condition": "Keur.index === 1"
+    },
+    {
+      "source": "n-splits",
+      "target": "n-geen-order",
+      "condition": "Splits.index === 1"
+    }
+  ],
+  "subworkflows": {}
+}

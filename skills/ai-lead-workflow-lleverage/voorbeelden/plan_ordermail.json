@@ -1,0 +1,16 @@
+{
+  "naam": "Ordermail naar concept",
+  "trigger": {"soort": "mail", "mailbox": "orders@voorbeeld.nl", "map": "AI TEST"},
+  "stappen": [
+    {"naam": "Lees_Mail", "soort": "llm",
+     "prompt": "Haal uit deze mail de bestelling. Neem de leverdatum letterlijk over.\n\nONDERWERP: {{Mailbox.data.subject}}\nMAIL:\n---\n{{Mailbox.data.body}}\n---",
+     "uitvoer": {"klant": "string", "leverdatum_letterlijk": "string?", "regels": "array", "is_order": "boolean"}},
+    {"naam": "Check", "soort": "js", "script": "const o = Lees_Mail.output; return {ok: o.is_order === true && o.regels.length > 0, aantal: o.regels.length};"},
+    {"naam": "Splits", "soort": "branch", "condities": {"order": "Check.result.ok === true", "geen_order": "Check.result.ok === false"}},
+    {"naam": "Keur", "soort": "mens_keur", "titel": "Order van {{Lees_Mail.output.klant}} goedkeuren?", "uitleg": "{{Check.result.aantal}} regels, leverdatum {{Lees_Mail.output.leverdatum_letterlijk}}", "na": "Splits.order"},
+    {"naam": "Antwoord", "soort": "mail_beantwoorden", "tekst": "Bedankt, we hebben {{Check.result.aantal}} regels ontvangen.", "na": "Keur.goed"},
+    {"naam": "Klaar", "soort": "output", "tekst": "Order verwerkt: {{Lees_Mail.output.klant}}"},
+    {"naam": "Afgekeurd", "soort": "output", "tekst": "Afgekeurd door mens", "na": "Keur.fout"},
+    {"naam": "Geen_Order", "soort": "output", "tekst": "Geen order: blijft liggen", "na": "Splits.geen_order"}
+  ]
+}

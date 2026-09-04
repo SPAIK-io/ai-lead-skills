@@ -4,13 +4,13 @@
   "owner": { "name": "SPAIK", "email": "jochem@spaik.io", "url": "https://spaik.io" },
   "metadata": {
     "description": "Skills voor AI leads: van interview tot procesmap tot eerste workflow.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "ai-lead-skills",
-      "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, procesmap maken, en (in aanbouw) van procesmap naar een importeerbare Lleverage-workflow.",
-      "version": "0.1.0",
+      "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, procesmap maken, en van procesmap naar een importeerbare Lleverage-workflow (bèta).",
+      "version": "0.2.0",
       "source": "./",
       "category": "workflow",
       "tags": ["ai-lead", "spaik", "interview", "procesmap", "lleverage", "nederlands"]
