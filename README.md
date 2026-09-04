@@ -12,20 +12,27 @@ en één klein stuk dat je als eerste bouwt.
 
 ## Installeren
 
-**De makkelijkste route, werkt op Mac en Windows:** open claude.ai, klik in het chatvenster op
-`+` > Add plugins > Add > Add from a repository, en plak
-`https://github.com/SPAIK-io/ai-lead-skills`. Zet de plugin aan. Gebruik je ook Claude Code op
-hetzelfde account, herstart die dan één keer: de skills staan er dan ook in.
+**Eén keer, in claude.ai** (werkt op Mac en Windows): klik in het chatvenster op `+` > Add plugins
+> Add > Add from a repository, plak `SPAIK-io/ai-lead-skills` en zet de plugin aan. De plugin
+staat daarna op je account: in claude.ai én in Claude Code, als je die op hetzelfde account
+gebruikt (Claude Code één keer herstarten).
 
-**Alleen Claude Code, zonder claude.ai** (typ dit in Claude Code zelf, niet in je terminal):
+Daarna typ je gewoon "interview voorbereiden", "procesmap maken" of "workflow maken" en pakt
+Claude de skill op.
+
+**Bijwerken:** updates komen vanzelf binnen, meestal binnen een uur. Wil je het nu: open de
+plugin (Customize > Plugins > Yours > Ai lead skills), drie puntjes > Check for updates.
+"No changes since the last release" betekent dat je al de nieuwste hebt.
+
+**Zie je "This marketplace is already added"?** Dan staat de bron er al. Niet opnieuw
+toevoegen; ga naar Discover, zoek "Ai lead skills" en zet hem aan.
+
+**Alleen Claude Code in de terminal, zonder claude.ai:**
 
 ```
 /plugin marketplace add SPAIK-io/ai-lead-skills
 /plugin install ai-lead-skills@ai-lead
 ```
-
-Daarna typ je gewoon "interview voorbereiden" of "procesmap maken" en pakt Claude de skill op.
-Updates komen vanzelf mee.
 
 ## Eigenaarschap en verbeteringen
 
