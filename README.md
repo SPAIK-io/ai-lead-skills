@@ -15,8 +15,12 @@ en één klein stuk dat je als eerste bouwt.
 
 Stap-voor-stap met screenshots: [docs/ai-lead-skills-installeren.pdf](docs/ai-lead-skills-installeren.pdf).
 
-**Eén keer, in claude.ai** (werkt op Mac en Windows): klik in het chatvenster op `+` > Add plugins
-> Add > Add from a repository, plak `SPAIK-io/ai-lead-skills` en zet de plugin aan. De plugin
+**Vooraf:** deze repo is privé. Je hebt een GitHub-account nodig en een uitnodiging van SPAIK
+(vraag Brahma of Jochem; stuur je GitHub-gebruikersnaam). Koppel dat GitHub-account één keer aan
+claude.ai (Settings > Integrations > GitHub).
+
+**Dan, in claude.ai** (werkt op Mac en Windows): klik in het chatvenster op `+` > Add plugins
+> Add > Add from a repository, kies of plak `SPAIK-io/ai-lead-skills` en zet de plugin aan. De plugin
 staat daarna op je account: in claude.ai én in Claude Code, als je die op hetzelfde account
 gebruikt (Claude Code één keer herstarten).
 
@@ -39,7 +43,7 @@ toevoegen; ga naar Discover, zoek "Ai lead skills" en zet hem aan.
 
 ## Eigenaarschap en verbeteringen
 
-SPAIK beheert deze repo. Iedereen mag lezen en gebruiken; wijzigen gaat via ons, zodat
+SPAIK beheert deze repo. Wie uitgenodigd is mag lezen en gebruiken; wijzigen gaat via ons, zodat
 iedereen dezelfde versie heeft. Heb je een verbetering: zeg het in de groep of bij de
 maandelijkse sessie, open een issue, of stuur een pull request. Pas de skill niet lokaal
 aan in je eigen `.claude/skills`, want dan mis je elke update.
