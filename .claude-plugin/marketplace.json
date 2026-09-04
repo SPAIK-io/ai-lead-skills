@@ -1,10 +1,14 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "ai-lead",
-  "owner": { "name": "SPAIK", "email": "jochem@spaik.io", "url": "https://spaik.io" },
+  "owner": {
+    "name": "SPAIK",
+    "email": "jochem@spaik.io",
+    "url": "https://spaik.io"
+  },
   "metadata": {
     "description": "Skills voor AI leads: van interview tot procesmap tot eerste workflow.",
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "plugins": [
     {
@@ -13,7 +17,20 @@
       "version": "0.3.0",
       "source": "./",
       "category": "workflow",
-      "tags": ["ai-lead", "spaik", "interview", "procesmap", "lleverage", "nederlands"]
+      "tags": [
+        "ai-lead",
+        "spaik",
+        "interview",
+        "procesmap",
+        "lleverage",
+        "nederlands"
+      ],
+      "author": {
+        "name": "SPAIK",
+        "email": "jochem@spaik.io",
+        "url": "https://spaik.io"
+      },
+      "homepage": "https://github.com/SPAIK-io/ai-lead-skills"
     }
   ]
 }
