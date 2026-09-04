@@ -13,6 +13,8 @@ en één klein stuk dat je als eerste bouwt.
 
 ## Installeren
 
+Stap-voor-stap met screenshots: [docs/ai-lead-skills-installeren.pdf](docs/ai-lead-skills-installeren.pdf).
+
 **Eén keer, in claude.ai** (werkt op Mac en Windows): klik in het chatvenster op `+` > Add plugins
 > Add > Add from a repository, plak `SPAIK-io/ai-lead-skills` en zet de plugin aan. De plugin
 staat daarna op je account: in claude.ai én in Claude Code, als je die op hetzelfde account
