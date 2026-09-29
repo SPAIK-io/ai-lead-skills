@@ -9,7 +9,7 @@ en één klein stuk dat je als eerste bouwt.
 | `ai-lead-interview` | Vooraf: doelzin, themaguide, vragen op maat, kaartje voor tijdens. Achteraf: transcript naar stappen, getallen, omwegen en gaten, plus terugkoppelbericht. | "interview voorbereiden", "transcript verwerken" |
 | `ai-lead-procesmap` | Interviewmateriaal naar de vier kolommen (stap, wie, hoe lang, wat gaat mis), gaten apart, waar zit de tijd en waar de frustratie. Met een invulbare HTML. | "procesmap maken" |
 | `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
-| `ai-lead-workflow-lleverage` | Van procesmap en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Bèta. | "workflow maken", "bouw dit in Lleverage" |
+| `ai-lead-workflow-lleverage` | Van procesmap en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
 
 ## Installeren
 

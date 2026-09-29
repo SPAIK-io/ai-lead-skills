@@ -5,10 +5,11 @@ description: >-
   importeren. Eerst een plannetje in gewone taal dat je samen scherp maakt, dan bouwt een
   script de JSON uit bouwstenen die bewezen werken, met een checklist van wat je na import
   zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van procesmap
-  naar flow", "eerste prototype", "lleverage json".
+  naar flow", "eerste prototype", "lleverage json", "flow met database", "databasevraag in
+  Lleverage".
 metadata:
-  version: "0.2"
-  last_updated: "2026-09-04"
+  version: "0.3"
+  last_updated: "2026-09-29"
 ---
 
 # Van procesmap naar Lleverage-workflow
@@ -57,6 +58,7 @@ Vijf tot tien stappen. Elke stap krijgt een korte naam (letters en underscores, 
 | `slack` | Bericht in een Slack-kanaal | |
 | `http` | Haalt iets op uit een API of stuurt iets weg | `{{Naam.data}}` |
 | `tabel_schrijven` / `tabel_lezen` | Rij in een Lleverage-tabel schrijven of lezen | `{{Naam.record}}` |
+| `database` | Leest rijen uit de database met één SELECT (alleen lezen, speeltuin) | alleen in een `js`-stap: `Naam.result` (de rijen) |
 | `output` | Eindpunt: wat je in de run ziet | |
 
 Triggers: `mail` (nieuwe mail in een map; velden `mailbox`, `map`), `app` (formulier; `velden`),
@@ -78,6 +80,7 @@ Wat elke soort nodig heeft:
 | `http` | `url` | `methode`, `body`, `auth` |
 | `tabel_schrijven` | `tabel`, `data` (kolom: waarde) | |
 | `tabel_lezen` | `tabel` | `filter` (kolom: waarde), `modus` (`first` of `all`) |
+| `database` | `sql`, plus bovenin het plan `lead` (je achtervoegsel) | `lead` per stap, `verbinding` (andere naam connection-secret) |
 | `output` | `tekst` | |
 
 Typen voor `uitvoer` en `velden`: `string`, `number`, `boolean`, `array`, en `string?` als het
@@ -99,6 +102,48 @@ Regels voor het plannetje:
   in het plan de mapnaam op (`"map": "AI LEAD <NAAM>"`).
 - **Geheimen nooit in het plan.** Een API-sleutel gaat als `{{_env.NAAM}}` en wordt in
   Lleverage als secret gezet.
+
+### Een databasevraag (`database`)
+
+Gebruik een databaseblok als de flow gegevens nodig heeft die al in de database staan:
+orders, klanten, artikelen. Het blok stelt één vraag (een SELECT) en geeft de rijen terug.
+Wil je iets opzoeken bij één mail of formulier, dan bouwt een `js`-stap eerst de vraag.
+
+```json
+{"naam": "Nieuwste orders mailen", "lead": "PIET",
+ "trigger": {"soort": "schedule", "cron": "0 8 1 1 *"},
+ "stappen": [
+  {"naam": "Haal_Orders", "soort": "database",
+   "sql": "SELECT salesordernumber, salesordername FROM playground.sales_order_header ORDER BY ordercreationdatetime DESC LIMIT 20"},
+  {"naam": "Maak_Lijst", "soort": "js",
+   "script": "var rijen = Haal_Orders.result || []; return {aantal: rijen.length, tekst: rijen.map(function (r) { return r.salesordernumber + ' ' + r.salesordername; }).join('<br>')};"},
+  ...
+```
+
+Het hele voorbeeld (plan en workflow) staat in `voorbeelden/plan_database_orders.json`.
+
+- **`lead` bovenin het plan is je achtervoegsel**, zoals je secrets in Lleverage heten:
+  `POSTGRES_CONNECTION_STRING_DEV_<ACHTERVOEGSEL>`, `POSTGRES_SSH_KEY_<..>` en de variables
+  `POSTGRES_SSH_HOST_<..>`, `_PORT_<..>`, `_USER_<..>`. Hoofdletters, geen accenten
+  (`JOSE`, niet `José`). Zonder achtervoegsel weigert het script. Er komt nooit een
+  wachtwoord of sleutel in het plan of de JSON.
+- **Alleen lezen, alleen de speeltuin.** De SQL begint met `SELECT`, bevat geen
+  schrijfopdracht (insert, update, delete, drop, alter, create, truncate, grant, revoke, copy),
+  geen `;` in het midden, en leest uit schema `playground` (`FROM playground.<tabel>`).
+- **Geen `--` commentaar** in de SQL: valt een regeleinde weg, dan is de rest van de vraag
+  commentaar. `/* ... */` mag wel.
+- **Geen `{{..}}` midden in de SQL.** Moet er een waarde uit de flow in, laat dan een `js`-stap
+  de hele SELECT bouwen (`return {sql: "SELECT ... FROM playground..."}`, laat alleen letters,
+  cijfers en streepjes door) en zet in het databaseblok precies `"sql": "{{Bouw_SQL.result.sql}}"`.
+- **De rijen lees je alleen in een `js`-stap**, als `Haal_Orders.result` (een lijst met één
+  object per rij, kolomnamen als velden). Niet `.rows` of `.data`, en nooit `{{Haal_Orders...}}`
+  in een tekst: maak eerst in de `js`-stap een tekst of getal, en gebruik dat verderop.
+- **Testen:** met een `schedule`-trigger klik je in Lleverage op Run; een `app`-trigger draait
+  pas na Publish.
+
+Na import: kies in het databaseblok de databaseverbinding "ODS dev", of controleer dat de
+secrets en variables met jouw achtervoegsel in je Lleverage-project staan (Control > Secrets).
+Het script zet dat in de `NA IMPORT`-regels.
 
 Leg het plannetje voor als tabel, en pas aan tot de AI lead zegt: ja, zo werkt het bij ons.
 Dit is het moment waarop de meeste fouten eruit gaan. Niet doorbouwen voordat dit klopt.
@@ -140,7 +185,7 @@ of Brahma om het script te draaien; dat kost een minuut. Schrijf de JSON niet me
 
 1. **Het workflow-bestand**, met een naam die zegt wat hij doet.
 2. **De importchecklist**, uit de `NA IMPORT`-regels van het script, in gewone taal:
-   welke connection, welke mailbox of map, welke tabel eerst aanmaken. In Lleverage staan
+   welke connection, welke mailbox of map, welke tabel eerst aanmaken, welke databaseverbinding. In Lleverage staan
    dezelfde punten in de beschrijving van de betreffende node, te herkennen aan
    `KIES NA IMPORT`.
 3. **Hoe je hem test:** welke mail je stuurt of wat je in het formulier plakt, en wat je dan

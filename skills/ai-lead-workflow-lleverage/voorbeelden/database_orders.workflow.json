@@ -1,0 +1,187 @@
+{
+  "version": 15,
+  "layoutMode": "free",
+  "nodes": [
+    {
+      "id": "e85ef865-3903-4fac-89a7-e3788930c31b",
+      "nodeId": "Schedule",
+      "type": "scheduleTrigger",
+      "inputs": {
+        "cronExpression": {
+          "type": "literal",
+          "value": "0 8 1 1 *"
+        },
+        "timeZone": {
+          "type": "literal",
+          "value": "Europe/Amsterdam"
+        }
+      },
+      "position": {
+        "x": 45,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Draait op vaste tijden (cron, Europe/Amsterdam).",
+      "descriptionManual": true
+    },
+    {
+      "id": "08db9aab-d837-4a5c-ad9f-c7fa731925c4",
+      "nodeId": "Haal_Orders",
+      "type": "databaseQuery",
+      "inputs": {
+        "connection": {
+          "type": "auto",
+          "value": "{{_secret.POSTGRES_CONNECTION_STRING_DEV_NAAM}}"
+        },
+        "sshKey": {
+          "type": "auto",
+          "value": "{{_secret.POSTGRES_SSH_KEY_NAAM}}"
+        },
+        "sshHost": {
+          "type": "auto",
+          "value": "{{_env.POSTGRES_SSH_HOST_NAAM}}"
+        },
+        "sshPort": {
+          "type": "auto",
+          "value": "{{_env.POSTGRES_SSH_PORT_NAAM}}"
+        },
+        "sshUser": {
+          "type": "auto",
+          "value": "{{_env.POSTGRES_SSH_USER_NAAM}}"
+        },
+        "query": {
+          "type": "auto",
+          "value": "SELECT salesordernumber AS ordernummer,\n       left(ordercreationdatetime, 10) AS datum,\n       salesordername AS klant,\n       deliverymodecode AS leverwijze,\n       deliveryaddresscity AS plaats\nFROM playground.sales_order_header\nORDER BY ordercreationdatetime DESC\nLIMIT 20"
+        }
+      },
+      "position": {
+        "x": 485,
+        "y": 45
+      },
+      "width": 420,
+      "description": "Database (schema playground, alleen lezen). Verbinding via secrets, niets inline. Uitvoer lees je alleen in een js-stap: Haal_Orders.result (de rijen).",
+      "descriptionManual": true
+    },
+    {
+      "id": "3cf2b720-79b9-4e27-9e53-ef2db15f8e55",
+      "nodeId": "Maak_Lijst",
+      "type": "javascript",
+      "inputs": {
+        "script": {
+          "type": "literal",
+          "value": "// De rijen uit het databaseblok (een lege lijst als er niets kwam).\nvar rijen = Haal_Orders.result || [];\n// Eén regel tekst per order.\nvar regels = rijen.map(function (r) {\n  return r.datum + ' ' + r.ordernummer + ' ' + r.klant + ' (' + r.leverwijze + ', ' + r.plaats + ')';\n});\n// <br> is een nieuwe regel in de mail.\nreturn { aantal: rijen.length, tekst: regels.join('<br>') };\n"
+        }
+      },
+      "position": {
+        "x": 925,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Code. Uitvoer onder {{Maak_Lijst.result.<veld>}}",
+      "descriptionManual": true
+    },
+    {
+      "id": "967ceedf-7e3f-43c0-9125-a838f2983d13",
+      "nodeId": "Mail_Jezelf",
+      "type": "external",
+      "inputs": {
+        "_baseUrl": {
+          "type": "literal",
+          "value": "https://actions.lleverage.ai/nodes"
+        },
+        "_nodeKey": {
+          "type": "literal",
+          "value": "microsoft-outlook_send-email"
+        },
+        "credentialId": {
+          "type": "literal",
+          "value": "<KIES NA IMPORT>"
+        },
+        "targetUser": {
+          "type": "auto",
+          "value": "<KIES NA IMPORT>"
+        },
+        "to": {
+          "type": "auto",
+          "value": "<JOUW EIGEN MAILADRES>"
+        },
+        "subject": {
+          "type": "auto",
+          "value": "[TEST] {{Maak_Lijst.result.aantal}} nieuwste orders uit de speeltuin"
+        },
+        "body": {
+          "type": "auto",
+          "value": "<p>{{Maak_Lijst.result.tekst}}</p>"
+        },
+        "bodyType": {
+          "type": "literal",
+          "value": "HTML"
+        },
+        "importance": {
+          "type": "literal",
+          "value": "Normal"
+        },
+        "saveToSentItems": {
+          "type": "literal",
+          "value": false
+        },
+        "__retryOptions": {
+          "type": "literal",
+          "value": {
+            "intervalMs": 1000,
+            "maxRetries": 2,
+            "onFailStrategy": "fail"
+          }
+        }
+      },
+      "position": {
+        "x": 1365,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Mail versturen via Outlook. KIES NA IMPORT: connection + afzender.",
+      "descriptionManual": true
+    },
+    {
+      "id": "29f3a56e-e473-453d-be60-d281931bd847",
+      "nodeId": "Klaar",
+      "type": "output",
+      "inputs": {
+        "body": {
+          "type": "auto",
+          "value": "{{Maak_Lijst.result.aantal}} orders opgehaald en naar jezelf gemaild."
+        },
+        "statusCode": {
+          "type": "literal",
+          "value": 200
+        }
+      },
+      "position": {
+        "x": 1805,
+        "y": 45
+      },
+      "width": 320,
+      "description": "Eindpunt: dit zie je in de run.",
+      "descriptionManual": true
+    }
+  ],
+  "edges": [
+    {
+      "source": "e85ef865-3903-4fac-89a7-e3788930c31b",
+      "target": "08db9aab-d837-4a5c-ad9f-c7fa731925c4"
+    },
+    {
+      "source": "08db9aab-d837-4a5c-ad9f-c7fa731925c4",
+      "target": "3cf2b720-79b9-4e27-9e53-ef2db15f8e55"
+    },
+    {
+      "source": "3cf2b720-79b9-4e27-9e53-ef2db15f8e55",
+      "target": "967ceedf-7e3f-43c0-9125-a838f2983d13"
+    },
+    {
+      "source": "967ceedf-7e3f-43c0-9125-a838f2983d13",
+      "target": "29f3a56e-e473-453d-be60-d281931bd847"
+    }
+  ],
+  "subworkflows": {}
+}

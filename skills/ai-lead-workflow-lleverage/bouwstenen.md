@@ -23,14 +23,21 @@ loopt een importsessie (testflows T1 t/m T6; T7 vervalt, mailtrigger is al in pr
 | `slack` | `external` slack_send-channel-message | bewezen |
 | `http` | `httpRequest` | bewezen |
 | `tabel_schrijven` / `tabel_lezen` | `dataTablesCreate` / `dataTablesFind`; data = literal-object met per kolom een getypte waarde `{"type":"auto","value":"{{...}}"}`, filters = object per kolom `{"kolom":{"value":..,"operator":"equals"}}`; uitvoer `.record` | bewezen (T4d, 4 sep) |
+| `database` | `databaseQuery` (PostgreSQL via SSH-tunnel); `connection` en `sshKey` als `{{_secret.NAAM_<ACHTERVOEGSEL>}}`, `sshHost/sshPort/sshUser` als `{{_env.NAAM_<ACHTERVOEGSEL>}}`, `query` als auto-tekst, geen `__retryOptions` (een databasefout stopt de run); uitvoer alleen in js als `Stap.result` (de rijen) | bewezen (oefening speeltuin, 28 sep, zes omgevingen) |
 | `output` | `output` | bewezen |
 
-Niet in het script: forEach met subworkflow, databaseQuery (eigen database via tunnel),
+Database: het script laat alleen één SELECT op schema `playground` door, zonder schrijfwoorden,
+zonder `;` in het midden en zonder `--` commentaar, of precies `{{Stap.result.sql}}` uit een
+js-stap die de SELECT bouwt. De namen van secrets en variables zijn per organisatie uniek,
+daarom het achtervoegsel (`"lead"` in het plan). Na import kies je de verbinding "ODS dev" of
+controleer je de secrets.
+
+Niet in het script: forEach met subworkflow,
 PDF-naar-tekst, en alle andere integraties. Let op bij tabellen: een sjabloon als kale tekst in het
 data-object blijft letterlijk staan (T4), een object als auto-waarde importeert niet (T4c). Die komen erbij zodra ze bewezen zijn.
 
 Omgevingswaarden die het script niet kan weten en als `<KIES NA IMPORT>` achterlaat:
-connection-id's (Outlook, Slack), mailbox en map, tabel- en project-id's, Slack-kanaal, en Assignees bij mens_vraag/mens_keur.
+connection-id's (Outlook, Slack), de databaseverbinding, mailbox en map, tabel- en project-id's, Slack-kanaal, en Assignees bij mens_vraag/mens_keur.
 Het model-id (46 = Claude Sonnet 4.6, 48 = GPT-5.4 mini) is per Lleverage-organisatie;
 klopt hij niet, dan kies je het model in de node opnieuw.
 

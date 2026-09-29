@@ -28,6 +28,7 @@ Plan-formaat (JSON):
     {"naam": "Lees_Tekst", "soort": "extract", "bron": "Form.data.Tekst", "uitvoer": {"naam": "string"}},
     {"naam": "Bewaar", "soort": "tabel_schrijven", "tabel": "leads", "data": {"naam": "{{Lees_Tekst.output.naam}}", "bron": "mail"}},
     {"naam": "Zoek", "soort": "tabel_lezen", "tabel": "leads", "filter": {"naam": "{{Lees_Tekst.output.naam}}"}, "modus": "first"},
+    {"naam": "Haal_Orders", "soort": "database", "sql": "SELECT ... FROM playground.sales_order_header ... LIMIT 20"},
     {"naam": "Klaar", "soort": "output", "tekst": "..."}
   ]
 }
@@ -35,12 +36,21 @@ Volgorde = lijstvolgorde, tenzij "na" iets anders zegt ("Stap" of "Branch.tak" o
 Soorten uitvoer: "string", "number", "boolean", "array" (van objecten met vrije velden), "string?" (mag null).
 Veld- en stapnamen: letters, cijfers, underscore; beginnen met een letter.
 Mail-trigger geeft: {{Mailbox.subject}}, {{Mailbox.body}}, {{Mailbox.from}}, {{Mailbox.files}}.
+
+Database (soort "database", Lleverage-node databaseQuery, PostgreSQL via een SSH-tunnel):
+- Top-level "lead": "<ACHTERVOEGSEL>" (bv. "PIET"): de secrets heten per organisatie
+  POSTGRES_CONNECTION_STRING_DEV_<ACHTERVOEGSEL>, POSTGRES_SSH_KEY_<..>, POSTGRES_SSH_HOST_<..>,
+  POSTGRES_SSH_PORT_<..>, POSTGRES_SSH_USER_<..>. Een stap mag zelf "lead" opgeven, en met
+  "verbinding" een andere naam voor de connection-secret. Zonder achtervoegsel: PLAN-FOUT.
+- "sql" is óf vaste tekst: één SELECT, alleen lezen, uit schema playground, geen -- (wel /* */);
+  óf precies {{Stap.result.sql}} uit een eerdere js-stap die de SELECT bouwt.
+- De rijen lees je ALLEEN in een js-stap: Haal_Orders.result (een lijst). Nooit {{Haal_Orders...}}.
 """
 import json, re, sys, uuid
 
 NAAM_RE = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 GERESERVEERD = {"Mailbox", "App", "Form", "Schedule", "API_Call"}
-ACCESSOR = {"javascript": "result", "llm": "output", "extract": "output", "httpRequest": "data", "requestInput": "data",
+ACCESSOR = {"databaseQuery": "result", "javascript": "result", "llm": "output", "extract": "output", "httpRequest": "data", "requestInput": "data",
             "dataTablesCreate": "record", "dataTablesFind": "record", "integrationV2Trigger": None, "form": "data", "apiCallTrigger": "body"}
 
 X0, XSTEP, Y, YSTEP = 45, 440, 45, 300
@@ -49,6 +59,21 @@ MODEL = {"languageModelId": 46, "modelName": "anthropic/claude-sonnet-4.6", "pro
 EXTRACT_MODEL = {"languageModelId": 48, "modelName": "openai/gpt-5.4-mini", "providerName": "OpenAI"}
 RETRY = {"intervalMs": 1000, "maxRetries": 2, "onFailStrategy": "fail"}
 OUTLOOK_BASE = "https://actions.lleverage.ai/nodes"
+
+# Database (databaseQuery). Vorm bewezen 28 sep in zes Lleverage-omgevingen: verbinding alleen via secrets
+# en variables, nooit een sleutel of verbindingsstring in de JSON. De rijen staan onder <Stap>.result.
+DB_VERBINDING = {                      # input: (soort verwijzing, naam zonder achtervoegsel)
+    "connection": ("_secret", "POSTGRES_CONNECTION_STRING_DEV"),
+    "sshKey": ("_secret", "POSTGRES_SSH_KEY"),
+    "sshHost": ("_env", "POSTGRES_SSH_HOST"),
+    "sshPort": ("_env", "POSTGRES_SSH_PORT"),
+    "sshUser": ("_env", "POSTGRES_SSH_USER"),
+}
+ACHTERVOEGSEL_RE = re.compile(r"[A-Z][A-Z0-9_]*")
+SECRETNAAM_RE = re.compile(r"[A-Z][A-Z0-9_]*")
+SCHRIJF_RE = re.compile(r"\b(insert|update|delete|drop|alter|create|truncate|grant|revoke|copy)\b", re.I)
+SQL_TEMPLATE_RE = re.compile(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\.result\.sql\}\}")
+GEHEIM_RE = re.compile(r"-----BEGIN|password=|sslmode=|postgres(ql)?://", re.I)
 
 
 def lit(v): return {"type": "literal", "value": v}
@@ -237,10 +262,64 @@ class Bouwer:
             if s.get("modus", "all") == "first": inputs["limit"] = auto("1")
             return self.node(naam, "dataTablesFind", inputs,
                              f"KIES NA IMPORT: tabel '{s['tabel']}'. Rijen lezen. Uitvoer onder {{{{{naam}.record}}}}", rij)
+        if soort == "database":
+            return self.database(s, naam, rij)
         if soort == "output":
             if not isinstance(s.get("tekst"), str): raise PlanFout(f"{naam}: 'tekst' moet een tekst zijn")
             return self.node(naam, "output", {"body": auto(s["tekst"]), "statusCode": lit(200)}, "Eindpunt: dit zie je in de run.", rij)
-        raise PlanFout(f"{naam}: onbekende soort '{soort}'. Kies uit llm, extract, js, branch, mens_vraag, mens_keur, mail_sturen, mail_beantwoorden, slack, http, tabel_schrijven, tabel_lezen, output")
+        raise PlanFout(f"{naam}: onbekende soort '{soort}'. Kies uit llm, extract, js, branch, mens_vraag, mens_keur, mail_sturen, mail_beantwoorden, slack, http, tabel_schrijven, tabel_lezen, database, output")
+
+    def database(self, s, naam, rij):
+        sql = s.get("sql")
+        if not isinstance(sql, str) or not sql.strip(): raise PlanFout(f"{naam}: 'sql' ontbreekt (de databasevraag, één SELECT)")
+        if "\x00" in sql: raise PlanFout(f"{naam}: null-byte in sql")
+        lead = s.get("lead", self.plan.get("lead"))
+        if not lead:
+            raise PlanFout(f"{naam}: geen achtervoegsel voor de secrets. Zet bovenin het plan \"lead\": \"<JOUW ACHTERVOEGSEL>\" "
+                           f"(bv. \"PIET\"), zoals je secrets in Lleverage heten: POSTGRES_CONNECTION_STRING_DEV_<ACHTERVOEGSEL>")
+        if not isinstance(lead, str) or not ACHTERVOEGSEL_RE.fullmatch(lead.strip().upper()):
+            raise PlanFout(f"{naam}: achtervoegsel '{lead}' mag alleen letters (zonder accenten), cijfers en _ bevatten, bv. \"JOSE\"")
+        lead = lead.strip().upper()
+        if "{{" in sql:
+            m = SQL_TEMPLATE_RE.fullmatch(sql.strip())
+            if not m:
+                raise PlanFout(f"{naam}: sql is óf vaste tekst óf precies {{{{Stap.result.sql}}}} uit een js-stap; "
+                               f"geen {{{{..}}}} midden in de SQL (wil je een waarde uit de flow, laat dan een js-stap de SELECT bouwen)")
+            bron = self.namen.get(m.group(1))
+            if not bron or bron["type"] != "javascript":
+                raise PlanFout(f"{naam}: {{{{{m.group(1)}.result.sql}}}} moet uit een eerdere js-stap komen")
+            script = bron["inputs"]["script"]["value"]
+            if not re.search(r"\bselect\b", script, re.I) or "playground." not in script:
+                raise PlanFout(f"{naam}: js-stap {m.group(1)} moet een SELECT op schema playground bouwen (playground.<tabel>)")
+        else:
+            kaal = re.sub(r"'(?:[^']|'')*'", "''", sql)       # tekst tussen quotes telt niet mee
+            if "--" in kaal:
+                raise PlanFout(f"{naam}: geen -- commentaar in de SQL (valt een regeleinde weg, dan is de rest van de vraag commentaar); gebruik /* ... */")
+            if not re.match(r"\s*SELECT\b", kaal, re.I):
+                raise PlanFout(f"{naam}: de SQL moet met SELECT beginnen (alleen lezen)")
+            if ";" in kaal.rstrip().rstrip(";"):
+                raise PlanFout(f"{naam}: één vraag per databaseblok; geen ; midden in de SQL")
+            w = SCHRIJF_RE.search(kaal)
+            if w:
+                raise PlanFout(f"{naam}: '{w.group(1)}' in de SQL; het databaseblok mag alleen lezen (SELECT)")
+            if "playground." not in kaal:
+                raise PlanFout(f"{naam}: lees uit de speeltuin: schema playground, bv. FROM playground.sales_order_header")
+        verbinding = {k: (soort_, f"{basis}_{lead}") for k, (soort_, basis) in DB_VERBINDING.items()}
+        if s.get("verbinding"):
+            if not isinstance(s["verbinding"], str) or not SECRETNAAM_RE.fullmatch(s["verbinding"]):
+                raise PlanFout(f"{naam}: 'verbinding' is de naam van de connection-secret: HOOFDLETTERS, cijfers en _")
+            verbinding["connection"] = ("_secret", s["verbinding"])
+        inputs = {k: auto(f"{{{{{soort_}.{n}}}}}") for k, (soort_, n) in verbinding.items()}
+        inputs["query"] = auto(sql.strip())
+        # Bewust GEEN __retryOptions: dan stopt de run zichtbaar bij een databasefout in plaats van stil door te gaan.
+        self.meldingen.append(f"{naam}: kies na import in de node de databaseverbinding \"ODS dev\", of controleer dat de secrets "
+                              f"{verbinding['connection'][1]} en POSTGRES_SSH_KEY_{lead} en de variables POSTGRES_SSH_HOST/PORT/USER_{lead} "
+                              f"in dit Lleverage-project bestaan.")
+        if lead == "NAAM":
+            self.meldingen.append(f"LET OP: achtervoegsel NAAM komt uit het voorbeeld; vul in het plan je eigen achtervoegsel in (\"lead\").")
+        return self.node(naam, "databaseQuery", inputs,
+                         "Database (schema playground, alleen lezen). Verbinding via secrets, niets inline. "
+                         f"Uitvoer lees je alleen in een js-stap: {naam}.result (de rijen).", rij, width=420)
 
     def bouw(self):
         if not isinstance(self.plan, dict): raise PlanFout("het plan moet een JSON-object zijn")
@@ -300,6 +379,7 @@ def valideer(wf):
     p = []
     ids = [n["id"] for n in wf["nodes"]]; namen = {n["nodeId"] for n in wf["nodes"]}
     bytype = {n["nodeId"]: n["type"] for n in wf["nodes"]}
+    dbnamen = [n["nodeId"] for n in wf["nodes"] if n["type"] == "databaseQuery"]
     if len(set(ids)) != len(ids): p.append("dubbele node-id")
     raw = json.dumps(wf, ensure_ascii=False)
     if "\x00" in raw: p.append("null-byte in export")
@@ -310,7 +390,7 @@ def valideer(wf):
     for e in wf["edges"]:
         if e["source"] not in ids or e["target"] not in ids: p.append(f"edge naar onbekende node: {e}")
     for ref in sorted(set(re.findall(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\.", raw))):
-        if ref not in namen and ref != "_env": p.append(f"{{{{{ref}.…}}}} verwijst naar een stap die niet bestaat")
+        if ref not in namen and ref not in ("_env", "_secret"): p.append(f"{{{{{ref}.…}}}} verwijst naar een stap die niet bestaat")
     for n in wf["nodes"]:
         uit = [e for e in wf["edges"] if e["source"] == n["id"]]
         if n["type"] in ("branch", "requestApproval"):
@@ -320,10 +400,27 @@ def valideer(wf):
             p.append(f"{n['nodeId']}: doodlopende stap (geen vervolg en geen output)")
         if n["type"] == "javascript":
             for ref, acc in set(re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\.(output|result|data|record|files|body|subject|from)\b", n["inputs"]["script"]["value"])):
-                if ref in ("Math", "JSON", "Object", "Array", "String", "Number", "Date", "console", "_env"): continue
+                if ref in ("Math", "JSON", "Object", "Array", "String", "Number", "Date", "console", "_env") or ref in dbnamen: continue
                 if ref not in namen: p.append(f"{n['nodeId']}: script gebruikt '{ref}.{acc}' maar die stap bestaat niet")
                 elif not accessor_ok(bytype[ref], acc): p.append(f"{n['nodeId']}: script gebruikt '{ref}.{acc}', maar {ref} geeft '.{verwacht(bytype[ref])}'")
+            script = n["inputs"]["script"]["value"]
+            # Bewezen 28 sep: de rijen van een databaseQuery staan onder .result. Alles anders (.rows, .data, [..]) is onbewezen.
+            for db in dbnamen:
+                if re.search(r"\b%s\s*\.\s*(?!result\b)[A-Za-z_$]" % re.escape(db), script) or re.search(r"\b%s\s*\[" % re.escape(db), script):
+                    p.append(f"{n['nodeId']}: script leest {db} anders dan met {db}.result (de rijen van een databaseblok staan alleen onder .result)")
+        if n["type"] == "databaseQuery":
+            for veld in ("connection", "sshKey", "sshHost", "sshPort", "sshUser", "query"):
+                if veld not in n["inputs"]: p.append(f"{n['nodeId']}: databaseQuery mist {veld}")
+            # De bouwer zet connection/sshKey als _secret en sshHost/Port/User als _env; hier alleen: nooit een waarde inline.
+            for veld in ("connection", "sshKey", "sshHost", "sshPort", "sshUser"):
+                if not re.fullmatch(r"\{\{_(secret|env)\.[A-Z0-9_]+\}\}", n["inputs"].get(veld, {}).get("value", "")):
+                    p.append(f"{n['nodeId']}: {veld} moet een verwijzing naar een secret of variable zijn, geen waarde")
+    for db in dbnamen:
+        if re.search(r"\{\{%s\." % re.escape(db), raw):
+            p.append(f"{{{{{db}.…}}}}: de uitvoer van een databaseblok lees je alleen in een js-stap ({db}.result), niet in een sjabloon")
+    if GEHEIM_RE.search(raw): p.append("iets dat op een sleutel of verbindingsstring lijkt staat in de JSON; gebruik secrets")
     for ref, acc in set(re.findall(r"\{\{([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_]+)", raw)):
+        if ref in dbnamen: continue
         if ref in namen and not accessor_ok(bytype[ref], acc):
             p.append(f"{{{{{ref}.{acc}}}}} klopt niet: {ref} geeft '.{verwacht(bytype[ref])}'")
     if sum(n["type"].endswith("Trigger") for n in wf["nodes"]) != 1: p.append("precies één trigger vereist")

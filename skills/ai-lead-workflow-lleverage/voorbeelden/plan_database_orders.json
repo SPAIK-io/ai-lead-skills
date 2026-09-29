@@ -1,0 +1,15 @@
+{
+  "naam": "Nieuwste orders uit de speeltuin mailen",
+  "lead": "NAAM",
+  "trigger": {"soort": "schedule", "cron": "0 8 1 1 *"},
+  "stappen": [
+    {"naam": "Haal_Orders", "soort": "database",
+     "sql": "SELECT salesordernumber AS ordernummer,\n       left(ordercreationdatetime, 10) AS datum,\n       salesordername AS klant,\n       deliverymodecode AS leverwijze,\n       deliveryaddresscity AS plaats\nFROM playground.sales_order_header\nORDER BY ordercreationdatetime DESC\nLIMIT 20"},
+    {"naam": "Maak_Lijst", "soort": "js",
+     "script": "// De rijen uit het databaseblok (een lege lijst als er niets kwam).\nvar rijen = Haal_Orders.result || [];\n// Eén regel tekst per order.\nvar regels = rijen.map(function (r) {\n  return r.datum + ' ' + r.ordernummer + ' ' + r.klant + ' (' + r.leverwijze + ', ' + r.plaats + ')';\n});\n// <br> is een nieuwe regel in de mail.\nreturn { aantal: rijen.length, tekst: regels.join('<br>') };\n"},
+    {"naam": "Mail_Jezelf", "soort": "mail_sturen", "aan": "<JOUW EIGEN MAILADRES>",
+     "onderwerp": "[TEST] {{Maak_Lijst.result.aantal}} nieuwste orders uit de speeltuin",
+     "tekst": "<p>{{Maak_Lijst.result.tekst}}</p>"},
+    {"naam": "Klaar", "soort": "output", "tekst": "{{Maak_Lijst.result.aantal}} orders opgehaald en naar jezelf gemaild."}
+  ]
+}
