@@ -1,20 +1,20 @@
 ---
 name: ai-lead-workflow-lleverage
 description: >-
-  Maakt van een procesmap en één gekozen stap een eerste workflow die je in Lleverage kunt
+  Maakt van een blueprint (of procesmap) en één gekozen stap een eerste workflow die je in Lleverage kunt
   importeren. Eerst een plannetje in gewone taal dat je samen scherp maakt, dan bouwt een
   script de JSON uit bouwstenen die bewezen werken, met een checklist van wat je na import
-  zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van procesmap
+  zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van blueprint naar flow", "van procesmap
   naar flow", "eerste prototype", "lleverage json", "flow met database", "databasevraag in
   Lleverage".
 metadata:
-  version: "0.3"
-  last_updated: "2026-09-29"
+  version: "0.4"
+  last_updated: "2026-10-05"
 ---
 
-# Van procesmap naar Lleverage-workflow
+# Van blueprint naar Lleverage-workflow
 
-Je hebt een procesmap en je hebt één klein stuk gekozen dat je als eerste wilt bouwen. Deze
+Je hebt een blueprint en je hebt één klein stuk gekozen dat je als eerste wilt bouwen. Deze
 skill maakt daar een werkend eerste prototype van: een bestand dat je in Lleverage importeert
 en meteen kunt draaien. Niet het eindproduct, wel iets waar je een echt gesprek over kunt
 voeren met de mensen die het straks gebruiken.
@@ -29,13 +29,13 @@ Of Lleverage elke bouwsteen precies zo accepteert, staat per bouwsteen in `bouws
 
 | Wat | Waarom |
 |---|---|
-| **De procesmap** of de uitwerking van je interviews | Zonder map bouw je uit je hoofd, en dat is precies wat we niet willen |
+| **De blueprint** of de uitwerking van je interviews | Zonder blueprint bouw je uit je hoofd, en dat is precies wat we niet willen |
 | **Welke stap** je als eerste wilt automatiseren, en waarom die | Eén stap. Twee stappen is twee workflows |
 | **Wat komt er binnen** (mail, formulier, vast tijdstip, een systeem dat aanklopt) | Bepaalt de trigger |
 | **Wat moet eruit** (mail terug, bericht in Slack, rij in een tabel, alleen een scherm) | Bepaalt het eind |
 | **Waar wil je dat een mens kijkt** | Bij een eerste versie bijna altijd ergens. Liever te vroeg dan te laat |
 
-Heb je geen procesmap, stuur dan terug naar `ai-lead-procesmap`.
+Heb je geen blueprint, stuur dan terug naar `ai-lead-blueprint`.
 
 ---
 
@@ -190,7 +190,7 @@ of Brahma om het script te draaien; dat kost een minuut. Schrijf de JSON niet me
    `KIES NA IMPORT`.
 3. **Hoe je hem test:** welke mail je stuurt of wat je in het formulier plakt, en wat je dan
    moet zien in de run. Eén concreet geval uit de interviews, niet een verzonnen voorbeeld.
-4. **Wat er bewust niet in zit** en waarom: de uitzonderingen uit de procesmap die je in
+4. **Wat er bewust niet in zit** en waarom: de uitzonderingen uit de blueprint die je in
    deze eerste versie overslaat. Dat is de agenda voor versie twee.
 
 Importeren: in Lleverage een nieuwe workflow aanmaken, importeren, de checklist afwerken,
@@ -216,7 +216,7 @@ Een flow die draait met een gat erin is beter dan een flow die niet importeert.
 
 ## Regels
 
-- **Eén stap uit de procesmap per workflow.** Wordt het plan langer dan tien stappen, dan
+- **Eén stap uit de blueprint per workflow.** Wordt het plan langer dan tien stappen, dan
   bouw je te veel tegelijk.
 - **Altijd een mens erin bij versie één**, tenzij de AI lead expliciet zegt van niet en
   kan uitleggen waarom het veilig is.

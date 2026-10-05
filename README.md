@@ -1,15 +1,15 @@
 # AI lead skills
 
-Skills voor AI leads bij klanten van [SPAIK](https://spaik.io), of ze nu in Lleverage of in n8n bouwen. Claude kiest zelf de passende bouw-skill; de interview- en procesmap-skills zijn voor iedereen gelijk. Ze volgen de opdracht uit
-sessie 1: interviews met de mensen die het werk doen, één procesmap van vier kolommen,
+Skills voor AI leads bij klanten van [SPAIK](https://spaik.io), of ze nu in Lleverage of in n8n bouwen. Claude kiest zelf de passende bouw-skill; de interview- en blueprint-skills zijn voor iedereen gelijk. Ze volgen de opdracht uit
+sessie 1: interviews met de mensen die het werk doen, één blueprint van het werk met de mensen erin,
 en één klein stuk dat je als eerste bouwt.
 
 | Skill | Wat hij doet | Roep je aan met |
 |---|---|---|
 | `ai-lead-interview` | Vooraf: doelzin, themaguide, vragen op maat, kaartje voor tijdens. Achteraf: transcript naar stappen, getallen, omwegen en gaten, plus terugkoppelbericht. | "interview voorbereiden", "transcript verwerken" |
-| `ai-lead-procesmap` | Interviewmateriaal naar de vier kolommen (stap, wie, hoe lang, wat gaat mis), gaten apart, waar zit de tijd en waar de frustratie. Met een invulbare HTML. | "procesmap maken" |
+| `ai-lead-blueprint` | Interviewmateriaal naar een blueprint: de stappen van links naar rechts met zes banen (wie het merkt, stap en wie, waarmee, hoe lang, wat gaat er mis, hoe voelt het), gaten apart, en waar de tijd, de fout en de dip zitten. Met een invulbare HTML. | "blueprint maken", "procesmap maken" |
 | `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
-| `ai-lead-workflow-lleverage` | Van procesmap en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
+| `ai-lead-workflow-lleverage` | Van blueprint en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
 
 ## Installeren
 
@@ -21,7 +21,7 @@ zet de plugin aan. De plugin
 staat daarna op je account: in claude.ai én in Claude Code, als je die op hetzelfde account
 gebruikt (Claude Code één keer herstarten).
 
-Daarna typ je gewoon "interview voorbereiden", "procesmap maken" of "workflow maken" en pakt
+Daarna typ je gewoon "interview voorbereiden", "blueprint maken" of "workflow maken" en pakt
 Claude de skill op.
 
 **Bijwerken:** updates komen vanzelf binnen, meestal binnen een uur. Wil je het nu: open de
