@@ -7,8 +7,8 @@ description: >-
   terugkoppeling naar degene die je sprak. Triggert op "interview voorbereiden",
   "gesprek prep", "wat moet ik vragen", "interview uitwerken", "transcript verwerken".
 metadata:
-  version: "1.0"
-  last_updated: "2026-08-12"
+  version: "1.1"
+  last_updated: "2026-10-05"
 ---
 
 # Interview-skill voor AI leads
@@ -172,5 +172,6 @@ levert weinig extra op.
 
 ## Waar dit naartoe gaat
 
-Na drie gesprekken ga je naar de procesmap. Gebruik daarvoor `ai-lead-procesmap`: die
-neemt de uitwerkingen uit deze skill als invoer.
+Na drie gesprekken ga je naar de blueprint. Gebruik daarvoor `ai-lead-blueprint`: die
+neemt de uitwerkingen uit deze skill als invoer. Vraag in elk gesprek daarom ook wie
+het merkt als het werk goed of slecht gaat, en hoe het voelt op de lastigste stap.
