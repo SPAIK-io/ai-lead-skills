@@ -7,7 +7,7 @@ en één klein stuk dat je als eerste bouwt.
 | Skill | Wat hij doet | Roep je aan met |
 |---|---|---|
 | `ai-lead-interview` | Vooraf: doelzin, themaguide, vragen op maat, kaartje voor tijdens. Achteraf: transcript naar stappen, getallen, omwegen en gaten, plus terugkoppelbericht. | "interview voorbereiden", "transcript verwerken" |
-| `ai-lead-blueprint` | Interviewmateriaal naar een blueprint: de stappen van links naar rechts met zes banen (wie het merkt, stap en wie, waarmee, hoe lang, wat gaat er mis, hoe voelt het), gaten apart, en waar de tijd, de fout en de dip zitten. Met een invulbare HTML. | "blueprint maken", "procesmap maken" |
+| `ai-lead-blueprint` | Interviewmateriaal naar een service blueprint: de stappen van links naar rechts met de banen eronder (de klant, de lijn van zicht, collega's, waarmee, hoe vaak, hoe lang, wat gaat mis, hoe voelt het en voor wie), hoe vaak keer hoe lang uitgerekend, gaten apart, en waar de tijd, de fout en de dip zitten. Met een invulbare HTML. | "blueprint maken", "procesmap maken" |
 | `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
 | `ai-lead-workflow-lleverage` | Van blueprint en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
 
