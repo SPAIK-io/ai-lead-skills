@@ -7,8 +7,8 @@ description: >-
   Triggert op "workflow maken in n8n", "bouw dit in n8n", "van blueprint naar n8n", "van procesmap naar n8n", "eerste
   prototype n8n". Gebruik je Lleverage, neem dan ai-lead-workflow-lleverage.
 metadata:
-  version: "0.2"
-  last_updated: "2026-10-05"
+  version: "0.3"
+  last_updated: "2026-10-07"
 ---
 
 # Van blueprint naar n8n-workflow
@@ -99,7 +99,8 @@ en zeg er eerlijk bij dat hij niet gevalideerd is.
 2. **De koppelchecklist**, in gewone taal: welke credentials de AI lead zelf moet invullen,
    welke mailbox of kanaal, welke sheet of tabel eerst moet bestaan.
 3. **Hoe je hem test:** welke mail je stuurt of wat je in het formulier zet, en wat je dan
-   moet zien. Eén concreet geval uit de interviews, niet een verzonnen voorbeeld.
+   moet zien. Eén geval zoals je het in de interviews hoorde, nagebouwd met verzonnen
+   gegevens. Echte gegevens van klanten, huurders of collega's horen niet in een test.
 4. **Wat er bewust niet in zit** en waarom.
 
 ---
@@ -109,6 +110,12 @@ en zeg er eerlijk bij dat hij niet gevalideerd is.
 - **Eén stap uit de blueprint per workflow.** Wordt het plan langer dan tien stappen, dan
   bouw je te veel tegelijk.
 - **Altijd een mens erin bij versie één**, tenzij de AI lead uitlegt waarom het veilig is.
+- **Test en productie blijven gescheiden.** Je bouwt en test in de testomgeving, met verzonnen
+  data. Naar productie gaat een workflow pas na een check met IT.
+- **Elke stap kun je uitleggen.** Kan de AI lead een node niet in gewone taal uitleggen, dan
+  gaat hij er niet in. Een code-node krijgt een extra check van IT voordat hij live gaat.
+- **Een nieuwe koppeling vraag je aan.** Is een systeem nog niet gekoppeld, dan bouw je er niet
+  omheen, maar vraag je de koppeling aan volgens de afspraken van je organisatie.
 - **Niets verzinnen.** Adressen, kanalen, sheet-namen komen van de AI lead.
 - **Geen geheimen in het plan of de workflow.**
 - Nederlands, je-vorm, korte zinnen, geen em-dashes.

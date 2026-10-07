@@ -8,8 +8,8 @@ description: >-
   die je aan de mensen kunt laten zien. Triggert op "blueprint maken", "procesmap maken",
   "proces in kaart", "interviews uitwerken naar een plaat".
 metadata:
-  version: "2.0"
-  last_updated: "2026-10-05"
+  version: "2.1"
+  last_updated: "2026-10-07"
 ---
 
 # Blueprint-skill voor AI leads
@@ -125,7 +125,7 @@ bij een klant zonder die skill, hou het dan neutraal: één accentkleur, verder 
 1. **Laat de blueprint terugzien** aan de mensen die je sprak, en aan iemand van de
    voorkant als dat kan. Eén vraag: klopt dit? Dat is het goedkoopste moment om erachter te
    komen dat je iets verkeerd begrepen hebt.
-2. **Kies één stap** om aan te pakken. Loop hem langs de poort: kun je de persoon noemen
+2. **Kies één stap** om aan te pakken. Toets hem eerst: kun je de persoon noemen
    die dit mist, en heb je dat zelf gehoord? Nee is nee, en dan gaat hij van de lijst af
    tot je het wél gehoord hebt.
 3. **Kies één getal** dat je vandaag al kunt tellen, en meet het nu. Zonder nulmeting kun
