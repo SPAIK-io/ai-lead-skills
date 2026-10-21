@@ -8,8 +8,8 @@ description: >-
   naar flow", "eerste prototype", "lleverage json", "flow met database", "databasevraag in
   Lleverage".
 metadata:
-  version: "0.4"
-  last_updated: "2026-10-05"
+  version: "0.5"
+  last_updated: "2026-10-21"
 ---
 
 # Van blueprint naar Lleverage-workflow
@@ -189,7 +189,8 @@ of Brahma om het script te draaien; dat kost een minuut. Schrijf de JSON niet me
    dezelfde punten in de beschrijving van de betreffende node, te herkennen aan
    `KIES NA IMPORT`.
 3. **Hoe je hem test:** welke mail je stuurt of wat je in het formulier plakt, en wat je dan
-   moet zien in de run. Eén concreet geval uit de interviews, niet een verzonnen voorbeeld.
+   moet zien in de run. Eén geval zoals je het in de interviews hoorde, nagebouwd met
+   verzonnen gegevens. Echte gegevens van klanten, huurders of collega's horen niet in een test.
 4. **Wat er bewust niet in zit** en waarom: de uitzonderingen uit de blueprint die je in
    deze eerste versie overslaat. Dat is de agenda voor versie twee.
 
@@ -220,6 +221,12 @@ Een flow die draait met een gat erin is beter dan een flow die niet importeert.
   bouw je te veel tegelijk.
 - **Altijd een mens erin bij versie één**, tenzij de AI lead expliciet zegt van niet en
   kan uitleggen waarom het veilig is.
+- **Test en productie blijven gescheiden.** Je bouwt en test met verzonnen data, en een
+  databasevraag alleen in de speeltuin. Naar productie gaat een workflow pas na een check met IT.
+- **Elke stap kun je uitleggen.** Kan de AI lead een stap niet in gewone taal uitleggen, dan
+  gaat hij er niet in. Een `js`-stap krijgt een extra check van IT voordat hij live gaat.
+- **Een nieuwe koppeling vraag je aan.** Is een systeem nog niet gekoppeld, dan bouw je er niet
+  omheen, maar vraag je de koppeling aan volgens de afspraken van je organisatie.
 - **Niets verzinnen.** Mailadressen, kanalen, tabelnamen komen van de AI lead. Weet die het
   niet, dan blijft de placeholder staan.
 - **Geen geheimen in het plan of de JSON.**
