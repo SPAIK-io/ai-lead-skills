@@ -1,6 +1,6 @@
 # AI lead skills
 
-Skills voor AI leads bij klanten van [SPAIK](https://spaik.io), of ze nu in Lleverage of in n8n bouwen. Claude kiest zelf de passende bouw-skill; de interview- en blueprint-skills zijn voor iedereen gelijk. Ze volgen de opdracht uit
+Skills voor AI leads bij klanten van [SPAIK](https://spaik.io), of ze nu in Lleverage, n8n of Power Automate bouwen. Claude kiest zelf de passende bouw-skill; de interview- en blueprint-skills zijn voor iedereen gelijk. Ze volgen de opdracht uit
 sessie 1: interviews met de mensen die het werk doen, één blueprint van het werk met de mensen erin,
 en één klein stuk dat je als eerste bouwt.
 
@@ -10,6 +10,7 @@ en één klein stuk dat je als eerste bouwt.
 | `ai-lead-blueprint` | Interviewmateriaal naar een service blueprint: de stappen van links naar rechts met de banen eronder (de klant, de lijn van zicht, collega's, waarmee, hoe vaak, hoe lang, wat gaat mis, hoe voelt het en voor wie), hoe vaak keer hoe lang uitgerekend, gaten apart, en waar de tijd, de fout en de dip zitten. Met een invulbare HTML. | "blueprint maken", "procesmap maken" |
 | `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
 | `ai-lead-workflow-lleverage` | Van blueprint en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
+| `ai-lead-workflow-power-automate` | Zelfde plannetje-stap, maar dan voor Power Automate: een bouwkaart die je zelf in de designer klikt (welke actie, welke instelling, welke expressie), met een koppelchecklist. | "workflow maken in Power Automate", "bouw dit in Power Automate" |
 
 ## Installeren
 

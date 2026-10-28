@@ -6,7 +6,8 @@ description: >-
   script de JSON uit bouwstenen die bewezen werken, met een checklist van wat je na import
   zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van blueprint naar flow", "van procesmap
   naar flow", "eerste prototype", "lleverage json", "flow met database", "databasevraag in
-  Lleverage".
+  Lleverage". Bouw je in n8n of Power Automate, neem dan ai-lead-workflow-n8n of
+  ai-lead-workflow-power-automate.
 metadata:
   version: "0.5"
   last_updated: "2026-10-21"

@@ -5,7 +5,8 @@ description: >-
   in gewone taal dat je samen scherp maakt, dan bouwt Claude hem met de n8n-skills en de
   n8n-MCP rechtstreeks in je n8n-omgeving, met een checklist van wat je zelf moet koppelen.
   Triggert op "workflow maken in n8n", "bouw dit in n8n", "van blueprint naar n8n", "van procesmap naar n8n", "eerste
-  prototype n8n". Gebruik je Lleverage, neem dan ai-lead-workflow-lleverage.
+  prototype n8n". Gebruik je Lleverage, neem dan ai-lead-workflow-lleverage; bouw je in Power
+  Automate, neem dan ai-lead-workflow-power-automate.
 metadata:
   version: "0.3"
   last_updated: "2026-10-07"
