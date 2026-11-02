@@ -1,0 +1,20 @@
+{
+  "organisatie": "",
+  "logo": "",
+  "font": "\"Helvetica Neue\",Helvetica,Arial,sans-serif",
+  "kleur": {
+    "accent": "#1F5FAD",
+    "accent_licht": "#DCE7F5",
+    "steun": "#8A94A0",
+    "steun_donker": "#5F6873",
+    "vlak": "#EEF1F4",
+    "inkt": "#23272B"
+  },
+  "cohort_zin": "",
+  "band": "",
+  "uren_kop": "",
+  "planning_tot": "",
+  "mijlpalen": [],
+  "testmoment": "",
+  "bron": "Neutrale stijl voor een organisatie zonder eigen voorinstelling. Vul de lege velden via inhoud.json."
+}

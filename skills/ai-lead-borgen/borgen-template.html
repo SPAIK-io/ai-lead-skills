@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borgen van de flow</title>
+<style>
+  :root { --ink:#111; --muted:#666; --line:#d6d6d6; --accent:#1f5fbf; --soft:#eef3fb; --warn:#a15c00; --warnsoft:#fff4e0; --bg:#fff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:860px; margin:0 auto; padding:24px 16px 64px; }
+  header h1 { font-size:24px; margin:0 0 4px; }
+  header p { margin:0; color:var(--muted); }
+  .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px 16px; margin:16px 0; }
+  .meta div { border-bottom:1px solid var(--line); padding:4px 0; }
+  .meta b { display:block; font-size:12px; color:var(--muted); font-weight:600; }
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:16px 0; position:sticky; top:0; background:var(--bg); padding:8px 0; z-index:2; border-bottom:1px solid var(--line); }
+  .tab { border:1px solid var(--line); background:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font:inherit; }
+  .tab[aria-selected="true"] { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tools { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .tools button { font:inherit; padding:6px 10px; border-radius:6px; border:1px solid var(--line); background:#fff; cursor:pointer; }
+  #saved { color:var(--muted); font-size:13px; }
+  section { display:none; }
+  section.on { display:block; }
+  h2 { font-size:20px; margin:24px 0 4px; }
+  h3 { font-size:16px; margin:20px 0 6px; }
+  .intro { color:var(--muted); margin:0 0 12px; }
+  table { width:100%; border-collapse:collapse; margin:8px 0 16px; }
+  th, td { border:1px solid var(--line); padding:8px; vertical-align:top; text-align:left; }
+  th { background:var(--soft); font-size:13px; }
+  td.q { width:34%; font-weight:600; }
+  [contenteditable] { outline:none; min-height:1.5em; }
+  [contenteditable]:focus { background:var(--soft); }
+  [contenteditable]:empty::before { content:attr(data-ph); color:#9a9a9a; font-style:italic; }
+  .field { border:1px solid var(--line); border-radius:6px; padding:8px; margin:4px 0 12px; }
+  .sign { color:var(--muted); font-size:13px; }
+  .afgeleid { background:var(--warnsoft); border-bottom:1px dashed var(--warn); }
+  .legend { font-size:13px; color:var(--muted); }
+  .legend .afgeleid { padding:0 4px; }
+  .open { border:2px solid var(--warn); border-radius:8px; padding:12px 16px; margin-top:32px; background:var(--warnsoft); }
+  .open h2 { margin-top:0; font-size:18px; }
+  .sigline { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:24px; }
+  .sigline div { border-top:1px solid var(--ink); padding-top:4px; font-size:13px; color:var(--muted); min-height:48px; }
+  .ai { font-weight:600; }
+  #govt { table-layout:fixed; }
+  .sign div { min-height:2.2em; }
+  @media print {
+    @page { size:A4 portrait; margin:15mm; }
+    body { font-size:11pt; }
+    .bar, .legend { display:none; }
+    section { display:block !important; break-after:page; }
+    #beheer { break-after:auto; }
+    .open { break-inside:avoid; }
+    tr, .field { break-inside:avoid; }
+    [contenteditable]:empty::before { content:""; }
+    th { background:#f0f0f0 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 contenteditable data-k="titel" data-ph="Naam van de flow"></h1>
+    <p>Uitlegkaart, governance-check en beheerdocumentatie</p>
+    <div class="meta">
+      <div><b>Platform</b><span contenteditable data-k="platform" data-ph="n8n, Lleverage, Power Automate"></span></div>
+      <div><b>Eigenaar (AI lead)</b><span contenteditable data-k="eigenaar" data-ph="Naam"></span></div>
+      <div><b>Vervanger</b><span contenteditable data-k="vervanger" data-ph="Naam"></span></div>
+      <div><b>Stand van</b><span contenteditable data-k="datum" data-ph="Datum"></span></div>
+    </div>
+  </header>
+
+  <nav class="bar" role="tablist">
+    <button class="tab" role="tab" data-t="uitleg" aria-selected="true">Uitlegkaart</button>
+    <button class="tab" role="tab" data-t="gov" aria-selected="false">Governance-check</button>
+    <button class="tab" role="tab" data-t="beheer" aria-selected="false">Beheerdocumentatie</button>
+    <span class="tools">
+      <span id="saved"></span>
+      <button id="md" type="button">Download als markdown</button>
+      <button type="button" onclick="window.print()">Print</button>
+    </span>
+  </nav>
+  <p class="legend"><span class="afgeleid">Zo gemarkeerd</span> = uit de export gehaald, nog niet bevestigd door de lead.</p>
+
+  <!-- 1. UITLEGKAART -->
+  <section id="uitleg" class="on">
+    <h2>Uitlegkaart</h2>
+    <p class="intro">Vijf vragen, beantwoord zonder de flow open. Lukt dat niet, dan is de flow niet af.</p>
+    <table>
+      <tr><td class="q">1. Welke data, uit welke bron?</td><td contenteditable data-k="u1" data-ph="Elk systeem, elke mailbox, elk bestand bij naam"></td></tr>
+      <tr><td class="q">2. Per batch of in één keer?</td><td contenteditable data-k="u2" data-ph="Per geval of een stapel tegelijk, en wanneer"></td></tr>
+      <tr><td class="q">3. Waar valt het besluit?</td><td contenteditable data-k="u3" data-ph="Wie beslist, bij welke stap"></td></tr>
+      <tr><td class="q">4. Waarvoor een taalmodel?</td><td contenteditable data-k="u4" data-ph="Alleen waar interpretatie nodig is"></td></tr>
+      <tr><td class="q">5. Wat schrijf je terug, en wat log je?</td><td contenteditable data-k="u5" data-ph="Waar de uitkomst landt, wat per stap wordt vastgelegd"></td></tr>
+    </table>
+  </section>
+
+  <!-- 2. GOVERNANCE-CHECK -->
+  <section id="gov">
+    <h2>Governance-check</h2>
+    <p class="intro">Punt 1 tot en met 3 vult de lead in en tekent de AI-manager. Punt 4 tot en met 7 tekent de IT-buddy. De drempel tekent de leidinggevende. Wat nog niet klopt, noteert wie tekent met een datum.</p>
+    <table id="govt">
+      <colgroup><col style="width:5%"><col style="width:28%"><col style="width:37%"><col style="width:18%"><col style="width:12%"></colgroup>
+      <tr><th>#</th><th>Punt</th><th>Antwoord</th><th>Getekend door</th><th>Datum</th></tr>
+      <tr><td>1</td><td>Uitlegkaart: de vijf vragen, zonder de flow open</td><td contenteditable data-k="g1" data-ph="Zie tab Uitlegkaart"></td><td class="sign">Lead vult in, AI-manager tekent<div contenteditable data-k="g1s" data-ph="Naam"></div></td><td contenteditable data-k="g1d"></td></tr>
+      <tr><td>2</td><td>Eigenaar en vervanger (twee namen)</td><td contenteditable data-k="g2" data-ph="Eigenaar en vervanger"></td><td class="sign">Lead vult in, AI-manager tekent<div contenteditable data-k="g2s" data-ph="Naam"></div></td><td contenteditable data-k="g2d"></td></tr>
+      <tr><td>3</td><td>Risiconiveau volgens de kaders; langs de eigen poort als het middelhoog is</td><td contenteditable data-k="g3" data-ph="Niveau, en welk kader"></td><td class="sign">Lead vult in, AI-manager tekent<div contenteditable data-k="g3s" data-ph="Naam"></div></td><td contenteditable data-k="g3d"></td></tr>
+      <tr><td>4</td><td>Persoonsgegevens: welke, en blijven ze binnen de omgeving</td><td contenteditable data-k="g4" data-ph="Welke gegevens, waar ze blijven"></td><td class="sign">IT-buddy<div contenteditable data-k="g4s" data-ph="Naam"></div></td><td contenteditable data-k="g4d"></td></tr>
+      <tr><td>5</td><td>Logging en monitoring per stap, en wie ziet een fout</td><td contenteditable data-k="g5" data-ph="Wat per stap wordt vastgelegd, wie een fout ziet"></td><td class="sign">IT-buddy<div contenteditable data-k="g5s" data-ph="Naam"></div></td><td contenteditable data-k="g5d"></td></tr>
+      <tr><td>6</td><td>Versies en back-up: gepubliceerd op de bestaande flow, export bij IT</td><td contenteditable data-k="g6" data-ph="Waar de versies en de export staan"></td><td class="sign">IT-buddy<div contenteditable data-k="g6s" data-ph="Naam"></div></td><td contenteditable data-k="g6d"></td></tr>
+      <tr><td>7</td><td>Uitzetten: wie kan het, en wat doet de afdeling dan</td><td contenteditable data-k="g7" data-ph="Wie, hoe, en wat de afdeling dan doet"></td><td class="sign">IT-buddy<div contenteditable data-k="g7s" data-ph="Naam"></div></td><td contenteditable data-k="g7d"></td></tr>
+      <tr><td></td><td><b>Drempel</b> (90 of 95%) en behaalde score op de eval-set</td><td contenteditable data-k="gd" data-ph="90%: een mens controleert elke uitkomst (18 van 20). 95%: uitkomst gaat zonder mens door (19 van 20, en de vijf lastige gevallen goed of naar een mens). Score: __ van 20"></td><td class="sign">Leidinggevende<div contenteditable data-k="gds" data-ph="Naam"></div></td><td contenteditable data-k="gdd"></td></tr>
+    </table>
+    <div class="sigline"><div>AI-manager</div><div>IT-buddy</div><div>Leidinggevende</div></div>
+  </section>
+
+  <!-- 3. BEHEERDOCUMENTATIE -->
+  <section id="beheer">
+    <h2>Beheerdocumentatie</h2>
+    <p class="intro">Voor de vervanger. Hij moet de flow hiermee kunnen uitleggen en stilzetten, zonder hulp van de lead. Bouwen hoeft niet.</p>
+
+    <h3>1. Wat de flow doet</h3>
+    <div class="field" contenteditable data-k="b1zin" data-ph="De flowzin: Als er ___ binnenkomt, zet de flow ___ klaar, en ___ beslist."></div>
+    <div class="field" contenteditable data-k="b1" data-ph="In vijf regels"></div>
+
+    <h3>2. De uitlegkaart</h3>
+    <p class="intro">Zie de tab Uitlegkaart. Bij afdrukken staat hij op de eerste pagina.</p>
+
+    <h3>3. Eigenaar en vervanger</h3>
+    <div class="field" contenteditable data-k="b3" data-ph="Namen, en hoe je ze bereikt"></div>
+
+    <h3>4. Stappen</h3>
+    <table id="stappen">
+      <tr><th>#</th><th>Stap</th><th>Wat gaat erin</th><th>Wat komt eruit</th><th>AI of gewone stap</th></tr>
+      <tr><td>1</td><td contenteditable data-k="s1n"></td><td contenteditable data-k="s1i"></td><td contenteditable data-k="s1o"></td><td contenteditable data-k="s1t" class="ai"></td></tr>
+      <tr><td>2</td><td contenteditable data-k="s2n"></td><td contenteditable data-k="s2i"></td><td contenteditable data-k="s2o"></td><td contenteditable data-k="s2t" class="ai"></td></tr>
+      <tr><td>3</td><td contenteditable data-k="s3n"></td><td contenteditable data-k="s3i"></td><td contenteditable data-k="s3o"></td><td contenteditable data-k="s3t" class="ai"></td></tr>
+      <tr><td>4</td><td contenteditable data-k="s4n"></td><td contenteditable data-k="s4i"></td><td contenteditable data-k="s4o"></td><td contenteditable data-k="s4t" class="ai"></td></tr>
+      <tr><td>5</td><td contenteditable data-k="s5n"></td><td contenteditable data-k="s5i"></td><td contenteditable data-k="s5o"></td><td contenteditable data-k="s5t" class="ai"></td></tr>
+    </table>
+
+    <h3>5. Menscontrole</h3>
+    <div class="field" contenteditable data-k="b5" data-ph="Waar zit de mens, wat keurt hij goed, en hoe staat het goedkeuringspercentage (ongewijzigd goedgekeurd, gemeten of geschat)"></div>
+
+    <h3>6. Bij een storing</h3>
+    <div class="field" contenteditable data-k="b6" data-ph="Hoe merk je het, hoe zet je de flow stil, wat doet de afdeling dan, wie bel je. Keten: gebruiker, AI lead, IT-buddy, dan SPAIK voor wat nieuw of ingewikkeld is"></div>
+
+    <h3>7. Bij een update van model of platform</h3>
+    <div class="field" contenteditable data-k="b7" data-ph="Draai de eval-set opnieuw voordat je live gaat. Waar staat de set, wie draait hem"></div>
+
+    <h3>8. Als het proces verandert</h3>
+    <div class="field" contenteditable data-k="b8" data-ph="Wie vertelt het de eigenaar, en welke stappen raakt het"></div>
+
+    <h3>9. Waar alles staat</h3>
+    <table>
+      <tr><td class="q">Flow</td><td contenteditable data-k="w1"></td></tr>
+      <tr><td class="q">Export</td><td contenteditable data-k="w2"></td></tr>
+      <tr><td class="q">Eval-set</td><td contenteditable data-k="w3"></td></tr>
+      <tr><td class="q">Log</td><td contenteditable data-k="w4"></td></tr>
+    </table>
+  </section>
+
+  <div class="open">
+    <h2>Nog open, en bij wie</h2>
+    <div contenteditable data-k="open" data-ph="Vraag aan de IT-buddy: ... / Vraag aan de AI-manager: ... / Vraag aan de leidinggevende: ..."></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var fields = Array.prototype.slice.call(document.querySelectorAll('[data-k]'));
+  // De sleutel hangt aan wat Claude invulde: een nieuw ingevulde versie begint schoon,
+  // ook als hij op hetzelfde pad staat als een eerdere.
+  var basis = fields.map(function (f) { return f.innerHTML; }).join('|'), h = 0;
+  for (var i = 0; i < basis.length; i++) { h = (h * 31 + basis.charCodeAt(i)) | 0; }
+  var KEY = 'ai-lead-borgen:' + location.pathname + ':' + h;
+
+  // Tabs
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+      document.querySelectorAll('section').forEach(function (s) { s.classList.toggle('on', s.id === t.dataset.t); });
+    });
+  });
+
+  // Laden: alleen als er een opgeslagen versie is
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved) fields.forEach(function (f) { if (saved[f.dataset.k] != null) f.innerHTML = saved[f.dataset.k]; });
+  } catch (e) {}
+
+  // Autosave
+  var timer;
+  function save() {
+    var data = {};
+    fields.forEach(function (f) { data[f.dataset.k] = f.innerHTML; });
+    try {
+      localStorage.setItem(KEY, JSON.stringify(data));
+      var d = new Date();
+      document.getElementById('saved').textContent = 'opgeslagen om ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    } catch (e) {
+      document.getElementById('saved').textContent = 'niet opgeslagen in deze browser, gebruik de download';
+    }
+  }
+  document.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(save, 400); });
+
+  // Markdown
+  function t(k) { var el = document.querySelector('[data-k="' + k + '"]'); return el ? el.innerText.trim() : ''; }
+  function cell(k) { return t(k).replace(/\|/g, '/').replace(/\n+/g, ' '); }
+  document.getElementById('md').addEventListener('click', function () {
+    var L = [];
+    L.push('# ' + (t('titel') || 'Flow'), '');
+    L.push('Platform: ' + t('platform') + '  ', 'Eigenaar: ' + t('eigenaar') + '  ', 'Vervanger: ' + t('vervanger') + '  ', 'Stand van: ' + t('datum'), '');
+    L.push('## Uitlegkaart', '');
+    ['Welke data, uit welke bron?', 'Per batch of in één keer?', 'Waar valt het besluit?', 'Waarvoor een taalmodel?', 'Wat schrijf je terug, en wat log je?']
+      .forEach(function (q, i) { L.push((i + 1) + '. **' + q + '** ' + t('u' + (i + 1))); });
+    L.push('', '## Governance-check', '', '| # | Punt | Antwoord | Getekend door | Datum |', '|---|---|---|---|---|');
+    var gp = ['Uitlegkaart', 'Eigenaar en vervanger', 'Risiconiveau', 'Persoonsgegevens', 'Logging en monitoring', 'Versies en back-up', 'Uitzetten'];
+    gp.forEach(function (p, i) { var n = i + 1; L.push('| ' + n + ' | ' + p + ' | ' + cell('g' + n) + ' | ' + cell('g' + n + 's') + ' | ' + cell('g' + n + 'd') + ' |'); });
+    L.push('| | Drempel en score | ' + cell('gd') + ' | ' + cell('gds') + ' | ' + cell('gdd') + ' |', '');
+    L.push('## Beheerdocumentatie', '', '### 1. Wat de flow doet', t('b1zin'), '', t('b1'), '', '### 2. De uitlegkaart', 'Zie hierboven.', '', '### 3. Eigenaar en vervanger', t('b3'), '', '### 4. Stappen', '', '| # | Stap | Erin | Eruit | AI of gewoon |', '|---|---|---|---|---|');
+    document.querySelectorAll('#stappen tr').forEach(function (tr, i) {
+      if (i === 0) return;
+      var c = tr.querySelectorAll('td');
+      L.push('| ' + c[0].innerText + ' | ' + [1, 2, 3, 4].map(function (j) { return c[j].innerText.trim().replace(/\|/g, '/'); }).join(' | ') + ' |');
+    });
+    L.push('', '### 5. Menscontrole', t('b5'), '', '### 6. Bij een storing', t('b6'), '', '### 7. Bij een update van model of platform', t('b7'), '', '### 8. Als het proces verandert', t('b8'), '', '### 9. Waar alles staat', '- Flow: ' + t('w1'), '- Export: ' + t('w2'), '- Eval-set: ' + t('w3'), '- Log: ' + t('w4'), '', '## Nog open, en bij wie', t('open'), '');
+    var blob = new Blob([L.join('\n')], { type: 'text/markdown' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'borgen-' + (t('titel') || 'flow').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.md';
+    a.click();
+  });
+})();
+</script>
+</body>
+</html>
