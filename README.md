@@ -11,6 +11,11 @@ en één klein stuk dat je als eerste bouwt.
 | `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
 | `ai-lead-workflow-lleverage` | Van blueprint en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
 | `ai-lead-workflow-power-automate` | Zelfde plannetje-stap, maar dan voor Power Automate: een bouwkaart die je zelf in de designer klikt (welke actie, welke instelling, welke expressie), met een koppelchecklist. | "workflow maken in Power Automate", "bouw dit in Power Automate" |
+| `claude-leraar` | Een persoonlijke leraar voor Claude zelf. Vraagt eerst hoe je het liefst leert, kiest elke week één ding uit je eigen werk, laat je het zelf doen en houdt een leerlog bij. Helpt je je eerste eigen skills bouwen. Voor iedereen, niet alleen AI leads. | "leer me iets", "wat is mijn volgende stap" |
+| `tegenspraak` | Leest een notitie, voorstel of besluit zoals een kritische beslisser het leest: welk besluit het vraagt, drie zwakke plekken met citaat, wat ontbreekt. Herschrijft niets. | "tegenspraak", "lees dit kritisch" |
+
+`claude-leraar` en `tegenspraak` zijn er voor iedereen die met Claude werkt, ook buiten het
+AI-lead-programma: directie, teamleden en de leads zelf.
 
 ## Installeren
 
