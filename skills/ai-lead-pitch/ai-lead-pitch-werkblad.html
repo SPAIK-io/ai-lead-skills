@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business case en pitch</title>
+<!--
+  Werkblad van de skill ai-lead-pitch.
+  Claude vult alleen het PITCH_DATA-blok hieronder. De opbouw blijft zoals hij is.
+  Status per getal: "gemeten", "geschat", "nog niet gemeten" of "" (nog niet ingevuld).
+-->
+<script id="PITCH_DATA" type="application/json">
+{
+  "id": "leeg",
+  "titel": "",
+  "lead": "",
+  "afdeling": "",
+  "datum": "",
+  "bc": {
+    "nu_en_wil": { "tekst": "", "status": "" },
+    "nulmeting": { "tekst": "", "datum": "", "status": "" },
+    "stand_nu": { "tekst": "", "datum": "", "status": "" },
+    "volume": { "getal": "", "per": "maand", "status": "" },
+    "tijd_voor": { "getal": "", "status": "" },
+    "tijd_na": { "getal": "", "status": "" },
+    "afdeling_tijd": { "tekst": "", "volgens": "" },
+    "platform": { "tekst": "", "status": "" },
+    "uren_lead": { "getal": "", "status": "" },
+    "uren_it": { "getal": "", "status": "" },
+    "beter": { "tekst": "", "status": "" },
+    "uurtarief": { "getal": "", "bron": "" }
+  },
+  "pitch": {
+    "demo": "",
+    "zin": "",
+    "meter": "",
+    "business_case": "",
+    "klaar": "",
+    "vraag": ""
+  },
+  "slides": { "toen": "", "nu": "", "straks": "" },
+  "mt_vragen": [
+    { "vraag": "", "antwoord": "" },
+    { "vraag": "", "antwoord": "" },
+    { "vraag": "", "antwoord": "" }
+  ]
+}
+</script>
+<style>
+:root {
+  --ink: #111;
+  --muted: #666;
+  --line: #d4d4d4;
+  --bg: #fff;
+  --soft: #f5f5f5;
+  --accent: #1f5fbf;
+  --warn: #b45309;
+  --warn-bg: #fff4e5;
+  --over: #b91c1c;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 18px; margin: 32px 0 8px; border-bottom: 2px solid var(--accent); padding-bottom: 4px; }
+.meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.meta span[contenteditable] { color: var(--ink); min-width: 4em; display: inline-block; border-bottom: 1px dashed var(--line); }
+.bar { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px 16px; display: flex; gap: 12px; align-items: center; z-index: 2; flex-wrap: wrap; }
+.bar button { font: inherit; border: 1px solid var(--accent); color: var(--accent); background: var(--bg); border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+.bar .saved { color: var(--muted); font-size: 13px; margin-left: auto; }
+table.bc { width: 100%; border-collapse: collapse; }
+table.bc th, table.bc td { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; text-align: left; }
+table.bc th { width: 32%; font-weight: 600; background: var(--soft); font-size: 14px; }
+table.bc td.st { width: 140px; }
+[contenteditable] { outline: none; min-height: 1.4em; }
+[contenteditable]:empty::before { content: attr(data-leeg); color: #aaa; }
+[contenteditable]:focus { background: #eef4ff; }
+input.num { width: 6em; font: inherit; padding: 2px 4px; border: 1px solid var(--line); border-radius: 3px; }
+input.txt { font: inherit; padding: 2px 4px; border: 1px solid var(--line); border-radius: 3px; width: 9em; }
+select { font: inherit; font-size: 13px; padding: 2px; border: 1px solid var(--line); border-radius: 3px; width: 100%; }
+select.s-gemeten { border-color: #15803d; color: #15803d; }
+select.s-geschat { border-color: var(--warn); color: var(--warn); }
+select.s-nog { border-color: var(--over); color: var(--over); background: #fef2f2; }
+select.s-leeg { border-style: dashed; color: var(--muted); }
+.calc { background: var(--soft); }
+.calc .uit { font-weight: 600; font-size: 16px; }
+.calc .som { font-size: 13px; color: var(--muted); }
+.label { display: inline-block; font-size: 12px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; }
+.label.gemeten { background: #dcfce7; color: #15803d; }
+.label.geschat { background: var(--warn-bg); color: var(--warn); }
+.label.open { background: #fef2f2; color: var(--over); }
+.hint { font-size: 12px; color: var(--muted); }
+.card { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px; padding: 10px 12px; margin: 12px 0; break-inside: avoid; }
+.card header { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.card .min { font-weight: 700; color: var(--accent); margin-right: 8px; }
+.card .wat { font-weight: 600; }
+.card .tel { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.card .tel.over { color: var(--over); font-weight: 600; }
+.card .hint { margin: 2px 0 6px; }
+.card .tekst { white-space: pre-wrap; border-top: 1px dashed var(--line); padding-top: 6px; }
+.totaal { padding: 8px 12px; background: var(--soft); border-radius: 4px; font-size: 14px; }
+.totaal.over { background: #fef2f2; color: var(--over); }
+.qa td, .qa th { border: 1px solid var(--line); padding: 6px 8px; vertical-align: top; }
+.qa { width: 100%; border-collapse: collapse; }
+.qa th { background: var(--soft); text-align: left; font-size: 14px; }
+@media (max-width: 640px) {
+  table.bc th, table.bc td { display: block; width: 100%; }
+  table.bc td.st { width: 100%; }
+}
+@page { size: A4; margin: 14mm; }
+@media print {
+  .bar, .noprint { display: none !important; }
+  body { font-size: 11.5px; }
+  main { max-width: none; padding: 0; }
+  h2 { margin-top: 10px; }
+  #deel1 { page-break-after: always; }
+  table.bc th, table.bc td { padding: 4px 6px; }
+  select, input, input.num, input.txt { border: none !important; appearance: none; -webkit-appearance: none; background: none !important; padding: 0; }
+  input::placeholder { color: transparent; }
+  [contenteditable]:empty::before { content: ""; }
+}
+</style>
+</head>
+<body>
+<div class="bar noprint">
+  <button id="md">Download als markdown</button>
+  <button onclick="window.print()">Printen</button>
+  <span class="saved" id="saved">nog niet opgeslagen</span>
+</div>
+<main>
+  <section id="deel1">
+    <h1 contenteditable data-k="titel" data-leeg="Titel: wat de digitale collega doet"></h1>
+    <div class="meta">
+      <span>Lead: <span contenteditable data-k="lead" data-leeg="naam"></span></span>
+      <span>Afdeling: <span contenteditable data-k="afdeling" data-leeg="afdeling"></span></span>
+      <span>Datum: <span contenteditable data-k="datum" data-leeg="datum"></span></span>
+    </div>
+
+    <h2>Deel 1 · Business case</h2>
+    <table class="bc">
+      <tr><th>Wat het nu kost, en wat je wil</th>
+        <td contenteditable data-k="bc.nu_en_wil.tekst" data-leeg="Nu kost het ___ per week. Op [einddatum] wil ik ___."></td>
+        <td class="st"><select data-k="bc.nu_en_wil.status"></select></td></tr>
+      <tr><th>Nulmeting</th>
+        <td><div contenteditable data-k="bc.nulmeting.tekst" data-leeg="welk getal, wie telde het"></div>
+          <span class="hint">datum</span> <input class="txt" data-k="bc.nulmeting.datum"></td>
+        <td class="st"><select data-k="bc.nulmeting.status"></select></td></tr>
+      <tr><th>Stand nu</th>
+        <td><div contenteditable data-k="bc.stand_nu.tekst" data-leeg="hetzelfde getal, en waar gemeten: in het werk of op de test"></div>
+          <span class="hint">datum</span> <input class="txt" data-k="bc.stand_nu.datum"></td>
+        <td class="st"><select data-k="bc.stand_nu.status"></select></td></tr>
+      <tr><th>Volume</th>
+        <td><input class="num" type="number" min="0" step="any" data-k="bc.volume.getal"> gevallen per
+          <select data-k="bc.volume.per" style="width:auto"><option value="week">week</option><option value="maand">maand</option></select></td>
+        <td class="st"><select data-k="bc.volume.status"></select></td></tr>
+      <tr><th>Tijd per geval, voor</th>
+        <td><input class="num" type="number" min="0" step="any" data-k="bc.tijd_voor.getal"> minuten</td>
+        <td class="st"><select data-k="bc.tijd_voor.status"></select></td></tr>
+      <tr><th>Tijd per geval, na</th>
+        <td><input class="num" type="number" min="0" step="any" data-k="bc.tijd_na.getal"> minuten
+          <div class="hint">inclusief de tijd die een mens besteedt aan controleren</div></td>
+        <td class="st"><select data-k="bc.tijd_na.status"></select></td></tr>
+      <tr class="calc"><th>Vrijgekomen tijd per maand<div class="hint">volume × (tijd voor − tijd na)</div></th>
+        <td colspan="2"><div class="uit" id="uit"></div><div class="som" id="som"></div><div class="som" id="euro"></div></td></tr>
+      <tr><th>Wat de afdeling met die tijd doet</th>
+        <td><div contenteditable data-k="bc.afdeling_tijd.tekst" data-leeg="welk werk bleef liggen en komt nu aan bod"></div>
+          <span class="hint">volgens</span> <input class="txt" data-k="bc.afdeling_tijd.volgens" placeholder="rol, bijv. leidinggevende"></td>
+        <td class="st"></td></tr>
+      <tr><th>Wat de flow kost: platform</th>
+        <td contenteditable data-k="bc.platform.tekst" data-leeg="licentie of gebruik, per maand"></td>
+        <td class="st"><select data-k="bc.platform.status"></select></td></tr>
+      <tr><th>Wat de flow kost: uren lead</th>
+        <td><input class="num" type="number" min="0" step="any" data-k="bc.uren_lead.getal"> uur per maand, beheer</td>
+        <td class="st"><select data-k="bc.uren_lead.status"></select></td></tr>
+      <tr><th>Wat de flow kost: uren IT</th>
+        <td><input class="num" type="number" min="0" step="any" data-k="bc.uren_it.getal"> uur per maand</td>
+        <td class="st"><select data-k="bc.uren_it.status"></select></td></tr>
+      <tr><th>Wat er nog meer beter werd</th>
+        <td contenteditable data-k="bc.beter.tekst" data-leeg="fouten, doorlooptijd, klanttevredenheid: alleen wat je kunt laten zien"></td>
+        <td class="st"><select data-k="bc.beter.status"></select></td></tr>
+      <tr><th>Uurtarief (alleen met bron)</th>
+        <td>€ <input class="num" type="number" min="0" step="any" data-k="bc.uurtarief.getal"> per uur
+          <span class="hint">bron</span> <input class="txt" data-k="bc.uurtarief.bron" placeholder="bijv. controller"></td>
+        <td class="st"></td></tr>
+    </table>
+    <p class="hint">Bij elk getal: gemeten, geschat of nog niet gemeten. Een schatting heet een schatting.</p>
+  </section>
+
+  <section id="deel2">
+    <h2>Deel 2 · Pitch van 7 minuten</h2>
+    <div id="kaarten"></div>
+    <div class="totaal" id="totaal"></div>
+
+    <h2>Als de demo niet kan · drie slides in minuut 0-2</h2>
+    <div id="slides"></div>
+    <div class="totaal" id="totaal-slides"></div>
+
+    <h2>Wat het MT waarschijnlijk vraagt</h2>
+    <table class="qa"><tr><th style="width:40%">Vraag</th><th>Antwoord in één zin</th></tr>
+      <tbody id="qa"></tbody></table>
+  </section>
+</main>
+<script>
+(function () {
+  var WPM = 130;
+  var STATUS = [["", "status?"], ["gemeten", "gemeten"], ["geschat", "geschat"], ["nog niet gemeten", "nog niet gemeten"]];
+  var KAARTEN = [
+    ["demo", "0-2", "Demo", "Wat je laat zien: welk geval, welke stap, waar de mens beslist. Telt niet mee.", false],
+    ["zin", "2-3", "De zin", "___ verloor ___ per week aan ___, omdat ___", true],
+    ["meter", "3-4", "De meter", "Nulmeting (datum, gemeten of geschat) → nu (datum, gemeten)", true],
+    ["business_case", "4-5", "De business case", "Vrijgekomen tijd per maand, en wat de afdeling ermee doet", true],
+    ["klaar", "5-6", "Klaar voor gebruik", "Drempel, menscontrole, eigenaar en vervanger. Live: gebruikers en % ongewijzigd goedgekeurd. Niet live: livedatum en eerste gebruiker", true],
+    ["vraag", "6-7", "Eén vraag aan het MT", "Een besluit dat het MT nu kan nemen: wie, wat, per wanneer", true]
+  ];
+  var SLIDES = [["toen", "Waar stond ik, en wat heb ik gedaan"], ["nu", "Waar sta ik nu"], ["straks", "Waar ga ik heen"]];
+
+  var ruw = document.getElementById("PITCH_DATA").textContent, h = 0;
+  for (var i = 0; i < ruw.length; i++) { h = (h * 31 + ruw.charCodeAt(i)) | 0; }
+  var base = JSON.parse(ruw);
+  // Een opnieuw ingevuld werkblad begint schoon, ook met dezelfde id
+  var KEY = "ai-lead-pitch:" + (base.id || "leeg") + ":" + h;
+  var data = base;
+  try { var s = localStorage.getItem(KEY); if (s) data = JSON.parse(s); } catch (e) {}
+
+  function get(path) { return path.split(".").reduce(function (o, k) { return o == null ? undefined : o[k]; }, data); }
+  function set(path, v) {
+    var ks = path.split("."), o = data;
+    for (var i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null) o[ks[i]] = {}; o = o[ks[i]]; }
+    o[ks[ks.length - 1]] = v;
+  }
+  function words(t) { t = (t || "").trim(); return t ? t.split(/\s+/).length : 0; }
+  function nl(n, d) { return n.toLocaleString("nl-NL", { maximumFractionDigits: d == null ? 1 : d }); }
+  function num(path) { var v = get(path); return v === "" || v == null || isNaN(+v) ? null : +v; }
+
+  // kaarten en slides opbouwen
+  var kaarten = document.getElementById("kaarten");
+  KAARTEN.forEach(function (k) {
+    var el = document.createElement("div"); el.className = "card";
+    el.innerHTML = '<header><div><span class="min">' + k[1] + '</span><span class="wat">' + k[2] + '</span></div>' +
+      '<span class="tel" data-tel="pitch.' + k[0] + '" data-telt="' + (k[4] ? 1 : 0) + '"></span></header>' +
+      '<div class="hint">' + k[3] + '</div><div class="tekst" contenteditable data-k="pitch.' + k[0] + '" data-leeg="spreektekst"></div>';
+    kaarten.appendChild(el);
+  });
+  var slides = document.getElementById("slides");
+  SLIDES.forEach(function (s, i) {
+    var el = document.createElement("div"); el.className = "card";
+    el.innerHTML = '<header><div><span class="min">Slide ' + (i + 1) + '</span><span class="wat">' + s[1] + '</span></div>' +
+      '<span class="tel" data-tel="slides.' + s[0] + '" data-telt="0"></span></header>' +
+      '<div class="tekst" contenteditable data-k="slides.' + s[0] + '" data-leeg="spreektekst bij deze slide"></div>';
+    slides.appendChild(el);
+  });
+  var qa = document.getElementById("qa");
+  (data.mt_vragen || []).forEach(function (q, i) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td contenteditable data-k="mt_vragen.' + i + '.vraag" data-leeg="vraag"></td>' +
+      '<td contenteditable data-k="mt_vragen.' + i + '.antwoord" data-leeg="antwoord"></td>';
+    qa.appendChild(tr);
+  });
+
+  // statuskeuzes vullen
+  document.querySelectorAll("select[data-k$='.status']").forEach(function (sel) {
+    STATUS.forEach(function (o) { var op = document.createElement("option"); op.value = o[0]; op.textContent = o[1]; sel.appendChild(op); });
+  });
+  function kleur(sel) {
+    sel.className = sel.value === "gemeten" ? "s-gemeten" : sel.value === "geschat" ? "s-geschat" : sel.value === "nog niet gemeten" ? "s-nog" : "s-leeg";
+  }
+
+  // waarden zetten en luisteren
+  document.querySelectorAll("[data-k]").forEach(function (el) {
+    var v = get(el.dataset.k); if (v == null) v = "";
+    if (el.isContentEditable) el.textContent = v; else el.value = v;
+    if (el.tagName === "SELECT" && el.dataset.k.slice(-7) === ".status") kleur(el);
+    el.addEventListener("input", function () {
+      set(el.dataset.k, el.isContentEditable ? el.innerText.replace(/\n$/, "") : el.value);
+      if (el.tagName === "SELECT" && el.dataset.k.slice(-7) === ".status") kleur(el);
+      render(); save();
+    });
+  });
+
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(data));
+      var d = new Date();
+      document.getElementById("saved").textContent = "opgeslagen om " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    } catch (e) { document.getElementById("saved").textContent = "opslaan lukt niet in deze browser, download als markdown"; }
+  }
+
+  function berekening() {
+    var vol = num("bc.volume.getal"), voor = num("bc.tijd_voor.getal"), na = num("bc.tijd_na.getal");
+    var per = get("bc.volume.per") || "maand";
+    var st = [get("bc.volume.status"), get("bc.tijd_voor.status"), get("bc.tijd_na.status")];
+    var r = { uit: "", som: "", label: "", uren: null };
+    var mist = [];
+    if (vol == null) mist.push("volume"); if (voor == null) mist.push("tijd voor"); if (na == null) mist.push("tijd na");
+    if (mist.length) { r.uit = "Nog niet te berekenen"; r.som = "Ontbreekt: " + mist.join(", ") + "."; r.label = "open"; return r; }
+    var volM = per === "week" ? vol * 52 / 12 : vol;
+    var min = volM * (voor - na), uren = min / 60;
+    var stap = per === "week" ? nl(vol) + " per week × 4,33 = " + nl(volM, 1) + " per maand. " : "";
+    r.som = stap + nl(volM, 1) + " per maand × (" + nl(voor) + " − " + nl(na) + " minuten) = " + nl(min, 0) + " minuten = " + nl(uren, uren < 10 ? 1 : 0) + " uur per maand.";
+    r.uren = uren;
+    if (st.indexOf("nog niet gemeten") > -1 || st.indexOf("") > -1) { r.label = "open"; r.labelTekst = "niet alle getallen hebben een status, of een is nog niet gemeten"; }
+    else if (st.indexOf("geschat") > -1) { r.label = "geschat"; r.labelTekst = "geschat"; }
+    else { r.label = "gemeten"; r.labelTekst = "gemeten"; }
+    r.uit = uren <= 0 ? "Geen tijdwinst (" + nl(uren, 1) + " uur per maand)" : nl(uren, uren < 10 ? 1 : 0) + " uur per maand";
+    var ul = num("bc.uren_lead.getal"), ui = num("bc.uren_it.getal");
+    if (ul != null && ui != null) r.som += " Beheer daarnaast: " + nl(ul + ui) + " uur per maand (lead " + nl(ul) + ", IT " + nl(ui) + ").";
+    else if (ul != null || ui != null) r.som += " Beheer daarnaast: lead " + (ul == null ? "nog niet ingevuld" : nl(ul) + " uur") + ", IT " + (ui == null ? "nog niet ingevuld" : nl(ui) + " uur") + " per maand.";
+    return r;
+  }
+
+  function render() {
+    var r = berekening();
+    document.getElementById("uit").innerHTML = r.uit + (r.label ? ' <span class="label ' + r.label + '">' + (r.labelTekst || "nog niet te berekenen") + "</span>" : "");
+    document.getElementById("som").textContent = r.som;
+    var t = num("bc.uurtarief.getal"), bron = (get("bc.uurtarief.bron") || "").trim(), euro = "";
+    if (r.uren != null && r.uren > 0 && t != null && bron) euro = "In geld: " + nl(r.uren, 1) + " uur × € " + nl(t, 2) + " = € " + nl(r.uren * t, 0) + " per maand (uurtarief volgens " + bron + "). Zelfde status als de uren.";
+    else if (t != null && !bron) euro = "Geen bedrag zonder bron van het uurtarief.";
+    document.getElementById("euro").textContent = euro;
+
+    var tot = 0;
+    document.querySelectorAll("[data-tel]").forEach(function (el) {
+      var w = words(get(el.dataset.tel)), telt = el.dataset.telt === "1";
+      if (telt) tot += w;
+      var sec = Math.round(w / WPM * 60);
+      el.textContent = w + " woorden" + (telt || el.dataset.tel.indexOf("slides") === 0 ? " · ~" + Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0") : " · telt niet mee");
+      el.classList.toggle("over", telt && w > WPM * 1.15);
+    });
+    var tt = document.getElementById("totaal"), max = WPM * 5, sec = Math.round(tot / WPM * 60);
+    tt.textContent = "Minuut 2-7: " + tot + " van ~" + max + " woorden, ongeveer " + Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0") + " spreektijd. " + (tot > max ? "Te lang: schrap " + (tot - max) + " woorden." : "Past.");
+    tt.classList.toggle("over", tot > max);
+    var sw = SLIDES.reduce(function (a, s) { return a + words(get("slides." + s[0])); }, 0), smax = WPM * 2;
+    var ts = document.getElementById("totaal-slides");
+    ts.textContent = "Slides samen: " + sw + " van ~" + smax + " woorden (in plaats van de demo). " + (sw > smax ? "Te lang: schrap " + (sw - smax) + " woorden." : "Past.");
+    ts.classList.toggle("over", sw > smax);
+  }
+
+  function md() {
+    function st(p) { var s = get(p); return s ? " (" + s + ")" : " (status?)"; }
+    var b = "bc.", r = berekening(), L = [];
+    L.push("# " + (data.titel || "Business case en pitch"), "", "Lead: " + (data.lead || "") + " · Afdeling: " + (data.afdeling || "") + " · Datum: " + (data.datum || ""), "");
+    L.push("## Business case", "", "| Onderdeel | Invulling |", "|---|---|");
+    function row(a, v) { L.push("| " + a + " | " + String(v || "").replace(/\n/g, " ").replace(/\|/g, "/") + " |"); }
+    row("Wat het nu kost, en wat je wil", get(b + "nu_en_wil.tekst") + st(b + "nu_en_wil.status"));
+    row("Nulmeting", get(b + "nulmeting.tekst") + ", " + (get(b + "nulmeting.datum") || "datum?") + st(b + "nulmeting.status"));
+    row("Stand nu", get(b + "stand_nu.tekst") + ", " + (get(b + "stand_nu.datum") || "datum?") + st(b + "stand_nu.status"));
+    row("Volume", (get(b + "volume.getal") || "?") + " per " + (get(b + "volume.per") || "maand") + st(b + "volume.status"));
+    row("Tijd per geval, voor", (get(b + "tijd_voor.getal") || "?") + " min" + st(b + "tijd_voor.status"));
+    row("Tijd per geval, na (incl. menscontrole)", (get(b + "tijd_na.getal") || "?") + " min" + st(b + "tijd_na.status"));
+    row("Vrijgekomen tijd per maand", r.uit + (r.labelTekst ? " (" + r.labelTekst + ")" : "") + ". " + r.som);
+    row("Wat de afdeling met die tijd doet", get(b + "afdeling_tijd.tekst") + (get(b + "afdeling_tijd.volgens") ? " (volgens " + get(b + "afdeling_tijd.volgens") + ")" : ""));
+    row("Kosten: platform", get(b + "platform.tekst") + st(b + "platform.status"));
+    row("Kosten: uren lead per maand", (get(b + "uren_lead.getal") || "?") + st(b + "uren_lead.status"));
+    row("Kosten: uren IT per maand", (get(b + "uren_it.getal") || "?") + st(b + "uren_it.status"));
+    row("Wat er nog meer beter werd", get(b + "beter.tekst") + st(b + "beter.status"));
+    var e = document.getElementById("euro").textContent; if (e) row("In geld", e);
+    L.push("", "## Pitch van 7 minuten", "");
+    KAARTEN.forEach(function (k) { L.push("### " + k[1] + " · " + k[2], "", get("pitch." + k[0]) || "", ""); });
+    L.push(document.getElementById("totaal").textContent, "", "## Als de demo niet kan", "");
+    SLIDES.forEach(function (s, i) { L.push("### Slide " + (i + 1) + " · " + s[1], "", get("slides." + s[0]) || "", ""); });
+    L.push("## Wat het MT waarschijnlijk vraagt", "");
+    (data.mt_vragen || []).forEach(function (q) { L.push("- **" + (q.vraag || "") + "** " + (q.antwoord || "")); });
+    return L.join("\n");
+  }
+  document.getElementById("md").addEventListener("click", function () {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([md()], { type: "text/markdown" }));
+    a.download = ((data.afdeling || "ai-lead") + "-business-case-en-pitch.md").toLowerCase().replace(/\s+/g, "-");
+    a.click();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

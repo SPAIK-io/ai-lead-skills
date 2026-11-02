@@ -1,0 +1,25 @@
+{
+  "organisatie": "Havensteder",
+  "logo": "havensteder-logo.png",
+  "font": "Univers,\"Helvetica Neue\",Helvetica,Arial,sans-serif",
+  "kleur": {
+    "accent": "#CA150C",
+    "accent_licht": "#F6DCD9",
+    "steun": "#9D9488",
+    "steun_donker": "#777168",
+    "vlak": "#EEEBE8",
+    "inkt": "#2C2F31"
+  },
+  "cohort_zin": "Sinds oktober zijn we met negen AI leads, elk met een eigen proces. Bras Faasse, informatiemanager, houdt het overzicht.",
+  "band": "Na december stopt het niet: ik blijf het aanspreekpunt voor AI in ons team.",
+  "uren_kop": "Vijf uur per week.",
+  "planning_tot": "tot half december",
+  "mijlpalen": [
+    {"datum": "Oktober", "titel": "Onderzoeken", "tekst": "Rondvragen waar het werk vastloopt, en één proces kiezen."},
+    {"datum": "16 november", "titel": "Bouwen", "tekst": "Het eerste skelet van de digitale collega.", "nu": true},
+    {"datum": "9 december", "titel": "Testen en delen", "tekst": "Met onze leidinggevende erbij: werkt het in het echt?"},
+    {"datum": "16 december", "titel": "Laten zien", "tekst": "Demo en certificaat, samen met de andere leads."}
+  ],
+  "testmoment": "In de weken voor 9 december. Ik plan het met je in.",
+  "bron": "Kleuren en font van havensteder.nl (1 november 2026). Data en uren uit de STAND van het Havensteder-cohort."
+}

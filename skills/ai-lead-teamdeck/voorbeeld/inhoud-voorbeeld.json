@@ -1,0 +1,25 @@
+{
+  "naam": "Sam de Vries",
+  "team": "Verhuur",
+  "proces": "Nieuwe huurders sneller en zonder overtypen ingeschreven",
+  "meldplek": "het Teams-kanaal van Verhuur, of bij mij langs",
+  "taken": "bezichtigingen plannen, huurcontracten klaarzetten en vragen van woningzoekenden beantwoorden",
+  "zorg": "Misschien denk je: straks praat een computer met onze huurders. Dat gebeurt niet: wat de flow klaarzet, lees jij eerst.",
+  "tip1": {
+    "kort": "Schrijf een mail aan een woningzoekende dat de bezichtiging verschuift.",
+    "kort_uitkomst": "Een nette, lege mail. Hij weet niet wat er speelt, dus hij gokt.",
+    "beter": "Schrijf een mail aan een woningzoekende dat de bezichtiging van dinsdag naar donderdag gaat, [[omdat de vorige huurder later vertrekt. Bied twee tijden aan en houd het kort en vriendelijk.]] [[Vraag me eerst wat je nog moet weten.]]",
+    "beter_uitkomst": "Hij vraagt door, en de mail gaat over deze bezichtiging."
+  },
+  "matrix": [
+    {"soort": "Een mail", "ai": "Een bezichtiging bevestigen met adres en tijd", "jij": "Iemand afwijzen die al jaren zoekt"},
+    {"soort": "Een verslag", "ai": "Actiepunten uit ons teamoverleg", "jij": "Een gesprek met een huurder in een lastige situatie"},
+    {"soort": "Uitzoeken", "ai": "Een lang toewijzingsbeleid terugbrengen tot wat het voor ons betekent", "jij": "Besluiten wie de woning krijgt"}
+  ],
+  "signalen": [
+    "Je typt gegevens over uit een formulier in het systeem",
+    "Je zoekt lang naar het juiste document van een huurder",
+    "Je beantwoordt tien keer per week dezelfde vraag",
+    "Je denkt: dit moet toch slimmer kunnen"
+  ]
+}

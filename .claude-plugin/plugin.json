@@ -1,7 +1,7 @@
 {
   "name": "ai-lead-skills",
-  "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, blueprint maken, van blueprint naar een eerste workflow in Lleverage (bèta), n8n of Power Automate, plus een leraar die je stap voor stap meer uit Claude laat halen en een kritische tegenlezer voor je stukken.",
-  "version": "0.8.0",
+  "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, blueprint maken, van blueprint naar een eerste workflow in Lleverage (bèta), n8n of Power Automate, en na het bouwen: je team meenemen met een teamdeck, je flow borgen voor de governance-check en de overdracht, en je business case en pitch voor de eindpresentatie. Plus een leraar die je stap voor stap meer uit Claude laat halen en een kritische tegenlezer voor je stukken.",
+  "version": "0.9.0",
   "author": {
     "name": "SPAIK",
     "email": "jochem@spaik.io",
