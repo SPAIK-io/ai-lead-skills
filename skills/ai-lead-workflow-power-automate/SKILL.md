@@ -1,14 +1,15 @@
 ---
 name: ai-lead-workflow-power-automate
 description: >-
-  Maakt van een blueprint (of procesmap) en één gekozen stap een eerste flow in Microsoft
-  Power Automate. Eerst een plannetje in gewone taal dat je samen scherp maakt, dan een
-  bouwkaart die je stap voor stap in de designer klikt (welke actie, welke instelling, welke
-  expressie), met een checklist van wat je zelf moet koppelen. Triggert op "workflow maken in
-  Power Automate", "bouw dit in Power Automate", "cloud flow maken", "van blueprint naar Power
-  Automate", "eerste prototype Power Automate", en op vragen over een Power Automate-flow die
-  faalt of een expressie die niet werkt. Gebruik je n8n of Lleverage, neem dan
-  ai-lead-workflow-n8n of ai-lead-workflow-lleverage.
+  Use when the lead builds in Power Automate: the lead names Power Automate, or the CLAUDE.md or
+  AGENTS.md of the working folder says so (e.g. "Wij bouwen in Power Automate."). Maakt van een
+  blueprint (of procesmap) en één gekozen stap een eerste flow in Microsoft Power Automate. Eerst
+  een plannetje in gewone taal dat je samen scherp maakt, dan een bouwkaart die je stap voor
+  stap in de designer klikt (welke actie, welke instelling, welke expressie), met een checklist
+  van wat je zelf moet koppelen. Triggert op "workflow maken in Power Automate", "bouw dit in
+  Power Automate", "cloud flow maken", "van blueprint naar Power Automate", en op vragen over een
+  Power Automate-flow die faalt of een expressie die niet werkt. Is het platform niet genoemd en
+  ligt het niet vast, dan maakt ai-lead-workflow eerst de keuze.
 metadata:
   version: "0.1"
   last_updated: "2026-10-28"

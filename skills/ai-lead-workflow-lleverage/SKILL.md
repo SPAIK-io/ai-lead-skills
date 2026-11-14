@@ -1,13 +1,14 @@
 ---
 name: ai-lead-workflow-lleverage
 description: >-
-  Maakt van een blueprint (of procesmap) en één gekozen stap een eerste workflow die je in Lleverage kunt
-  importeren. Eerst een plannetje in gewone taal dat je samen scherp maakt, dan bouwt een
-  script de JSON uit bouwstenen die bewezen werken, met een checklist van wat je na import
-  zelf moet kiezen. Triggert op "workflow maken", "bouw dit in Lleverage", "van blueprint naar flow", "van procesmap
-  naar flow", "eerste prototype", "lleverage json", "flow met database", "databasevraag in
-  Lleverage". Bouw je in n8n of Power Automate, neem dan ai-lead-workflow-n8n of
-  ai-lead-workflow-power-automate.
+  Use when the lead builds in Lleverage: the lead names Lleverage, or the CLAUDE.md or AGENTS.md
+  of the working folder says so (e.g. "Wij bouwen in Lleverage."). Maakt van een blueprint (of
+  procesmap) en één gekozen stap een eerste workflow die je in Lleverage kunt importeren. Eerst
+  een plannetje in gewone taal dat je samen scherp maakt, dan bouwt een script de JSON uit
+  bouwstenen die bewezen werken, met een checklist van wat je na import zelf moet kiezen.
+  Triggert op "bouw dit in Lleverage", "workflow maken in Lleverage", "lleverage json",
+  "databasevraag in Lleverage", en op "flow met database" als Lleverage vastligt. Is het
+  platform niet genoemd en ligt het niet vast, dan maakt ai-lead-workflow eerst de keuze.
 metadata:
   version: "0.5"
   last_updated: "2026-10-21"

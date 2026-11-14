@@ -1,14 +1,15 @@
 ---
 name: ai-lead-workflow-n8n
 description: >-
-  Maakt van een blueprint (of procesmap) en één gekozen stap een eerste n8n-flow als
-  importbestand (JSON), zonder MCP en zonder API-sleutels. Eerst een plannetje in gewone taal
-  dat je samen scherp maakt, dan een bestand dat je in n8n importeert (Import from File) en zelf
-  draait, met per blok een Nederlandse naam en een notitie in gewone taal. Data komt uit een
-  n8n Data Table of uit een csv via een formulier. Triggert op "workflow maken in n8n", "bouw
-  dit in n8n", "n8n-flow als bestand", "importbestand voor n8n", "van blueprint naar n8n",
-  "eerste prototype n8n", "flow met mijn Data table". Gebruik je Lleverage, neem dan
-  ai-lead-workflow-lleverage; bouw je in Power Automate, neem dan ai-lead-workflow-power-automate.
+  Use when the lead builds in n8n: the lead names n8n, or the CLAUDE.md or AGENTS.md of the
+  working folder says so (e.g. "Wij bouwen in n8n."). Maakt van een blueprint (of procesmap) en
+  één gekozen stap een eerste n8n-flow als importbestand (JSON), zonder MCP en zonder
+  API-sleutels. Eerst een plannetje in gewone taal, dan een bestand dat je in n8n importeert
+  (Import from File) en zelf draait, met per blok een Nederlandse naam en een notitie. Data komt
+  uit een n8n Data Table of uit een csv via een formulier. Triggert op "workflow maken in n8n",
+  "bouw dit in n8n", "n8n-flow als bestand", "importbestand voor n8n", "van blueprint naar
+  n8n", "eerste prototype n8n". Is het platform niet genoemd en ligt het niet vast, dan maakt
+  ai-lead-workflow eerst de keuze.
 metadata:
   version: "0.4"
   last_updated: "2026-11-14"
