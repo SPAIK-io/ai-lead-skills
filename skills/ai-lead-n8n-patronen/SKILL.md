@@ -16,7 +16,7 @@ Gebaseerd op czlonkowski/n8n-skills (MIT), commit e037563, aangepast door SPAIK:
 
 Proven architectural patterns for building n8n workflows.
 
-For node types and typeVersions proven in the trial environment (n8n Cloud 2.47), and for the Data Table and Form Trigger + csv starting points, follow `ai-lead-workflow-n8n`; examples here may show other versions.
+For node types and typeVersions proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n), and for the Data Table and Form Trigger + csv starting points, follow `ai-lead-workflow-n8n`; examples here may show other versions.
 
 ---
 
@@ -146,7 +146,7 @@ When building ANY workflow, follow this checklist:
 ### Implementation Phase
 - [ ] Write the workflow JSON with the appropriate trigger
 - [ ] Add data source nodes
-- [ ] Reference existing credentials only (an administrator creates them; the lead can only view them)
+- [ ] Reference existing credentials only (an administrator creates them; check whether your role can only view credentials)
 - [ ] Add transformation nodes (native first: Filter, IF, Summarize, Merge…; Code only with a `Why Code:` note)
 - [ ] Add output/action nodes
 - [ ] Configure error handling
@@ -349,7 +349,7 @@ See: `ai-lead-n8n-expressies`
 **Problem**: API calls failing with 401/403
 
 **Solution**:
-- Pick an existing credential in the node's "Credentials" section, not in parameters (an administrator creates credentials; the lead can only view them)
+- Pick an existing credential in the node's "Credentials" section, not in parameters (an administrator creates credentials; if your role can only view credentials, you cannot create one)
 - Check it works with Execute step before the workflow is activated
 
 ### 4. Node Execution Order

@@ -30,7 +30,7 @@ This skill covers where binary lives, how to read and write it, how to keep it f
 
 ---
 
-## Proven in the trial environment (n8n Cloud 2.47): form upload + csv
+## Proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n): form upload + csv
 
 Tested on the instance (n8n Enterprise Cloud 2.47, 14 Nov):
 

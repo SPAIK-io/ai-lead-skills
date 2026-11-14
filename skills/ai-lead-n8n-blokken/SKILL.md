@@ -17,7 +17,7 @@ Gebaseerd op czlonkowski/n8n-skills (MIT), commit e037563, aangepast door SPAIK:
 
 Expert guidance for operation-aware node configuration with property dependencies, for flows that Claude writes as a workflow JSON file and the lead imports in n8n (Workflows → Create workflow → ⋯ → Import from File).
 
-For node types and typeVersions proven in the trial environment (n8n Cloud 2.47), follow `ai-lead-workflow-n8n`; examples here may show other versions.
+For node types and typeVersions proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n), follow `ai-lead-workflow-n8n`; examples here may show other versions.
 
 ---
 
@@ -155,9 +155,11 @@ Before reaching for a Code node, check this table; a Code node is the exception 
 | Top-N | Sort + Limit |
 | Dates | Date & Time, or a Luxon one-liner |
 | XML / HTML / Markdown / CSV / XLSX | XML, HTML, Markdown, Extract From File / Convert To File |
-| Paging an API (no service node) | HTTP Request's pagination option |
-| Throttle calls | HTTP Request's batching option, or Loop + Wait |
-| Hash, HMAC, UUID | Crypto (+ Webhook raw body) |
+| Paging an API (no service node) | HTTP Request's pagination option ¹ |
+| Throttle calls | HTTP Request's batching option ¹, or Loop + Wait |
+| Hash, HMAC, UUID | Crypto (+ Webhook raw body) ¹ |
+
+¹ Only with approval for a connection.
 
 Configs and traps per node: **[NATIVE_NODES.md](NATIVE_NODES.md)**.
 
@@ -212,8 +214,8 @@ Mechanism details, all four dependency patterns, complex flows, nested dependenc
 - authentication != "none" → credentials required
 
 **Critical: credentials block, node id, typeVersion**
-- **No `credentials` block in the import file.** Leads can only view credentials and there are no connections to
-  systems; Claude never creates a credential. Never set a placeholder credential ID (e.g. `"id": "REPLACE_ME"`) — n8n's
+- **No `credentials` block in the import file.** If your role can only view credentials, or there are no connections to
+  systems yet, Claude never creates a credential. Never set a placeholder credential ID (e.g. `"id": "REPLACE_ME"`) — n8n's
   UI renders a permanently disabled credential selector for unknown IDs. Without the block, the node shows the
   credential as missing and gets a normal clickable dropdown.
 - **Node `id` must be a UUID v4**, not a readable slug — the frontend binds forms and the credential component to it.
@@ -448,7 +450,7 @@ There is no live connection to n8n, so a change goes through the file or the edi
 
 4. **Add a `credentials` block or create credentials**
    - Leave it out; the node shows the credential as missing after import
-   - Leads can only view credentials
+   - If your role can only view credentials, you cannot create one either
 
 ---
 

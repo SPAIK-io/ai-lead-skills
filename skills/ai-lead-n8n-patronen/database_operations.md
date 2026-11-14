@@ -681,7 +681,7 @@ Schedule → Postgres (SELECT all) → JSON → Google Drive (upload)
 - [ ] Use parameterized queries (never concatenate)
 - [ ] Add LIMIT to all SELECT queries
 - [ ] Use appropriate operation (INSERT/UPDATE/UPSERT)
-- [ ] Use an existing credential (an administrator sets it up; the lead can only view it), never secrets in the JSON
+- [ ] Use an existing credential (an administrator sets it up, if your role can only view credentials), never secrets in the JSON
 - [ ] Test with small dataset first
 
 ### Performance

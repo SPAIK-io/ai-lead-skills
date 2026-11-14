@@ -28,6 +28,10 @@ Kijk eerst, in deze volgorde:
 2. **De `CLAUDE.md` of `AGENTS.md` van de werkmap.** Een regel als `Wij bouwen in n8n.` legt het
    vast. Ook een andere duidelijke zin over het platform telt.
 
+Wat de lead nu zegt, gaat voor. Noemt hij een ander platform dan in `CLAUDE.md` staat, zeg dan
+het verschil ("In je CLAUDE.md staat n8n, jij noemt nu Power Automate") en vraag of je de regel in
+`CLAUDE.md` moet aanpassen. Bouw intussen in het platform dat hij nu noemt.
+
 Ligt het vast, ga dan meteen naar stap 4. Vraag het niet opnieuw.
 
 ## 2. Vraag het één keer
@@ -42,13 +46,16 @@ niet zelf een platform.
 
 ## 3. Stel voor het vast te leggen
 
+Dit kan alleen in Claude Code, waar je in een map werkt. In de Claude-app is er geen `CLAUDE.md`
+die je kunt schrijven: sla deze stap daar over en ga door naar stap 4.
+
 Weet je het platform, stel dan voor:
 
 > Zal ik in de CLAUDE.md van deze map zetten: `Wij bouwen in <platform>.`? Dan vraag ik het
 > volgende keer niet opnieuw.
 
 Alleen na een ja schrijf je die regel. Bestaat `CLAUDE.md` al, voeg de regel dan onderaan toe en
-laat de rest staan. Bestaat hij niet, maak hem dan aan met alleen die regel. Zegt de lead nee,
+laat de rest staan; staat er al een regel over het platform, vervang dan alleen die regel. Bestaat hij niet, maak hem dan aan met alleen die regel. Zegt de lead nee,
 dan schrijf je niets en ga je gewoon door.
 
 ## 4. Ga door met de juiste skill

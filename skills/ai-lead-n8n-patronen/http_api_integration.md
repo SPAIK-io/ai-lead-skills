@@ -149,7 +149,7 @@ neither a Code nor a Set node is needed.
 ```
 
 ### 2. Bearer Token (Most Common)
-**Setup**: a Header Auth credential (an administrator creates it; the lead can only view it)
+**Setup**: a Header Auth credential (an administrator creates it, if your role can only view credentials)
 ```javascript
 {
   authentication: "predefinedCredentialType",

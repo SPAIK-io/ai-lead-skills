@@ -18,7 +18,7 @@ Gebaseerd op czlonkowski/n8n-skills (MIT), commit e037563, aangepast door SPAIK:
 
 Expert guidance for writing JavaScript code in n8n Code nodes.
 
-For node types and typeVersions proven in the trial environment (n8n Cloud 2.47), follow `ai-lead-workflow-n8n`; the Code node itself is not on that proven list, so tell the lead it is untested there.
+For node types and typeVersions proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n), follow `ai-lead-workflow-n8n`; the Code node itself is not on that proven list, so tell the lead it is untested there.
 
 You write the Code node into the workflow JSON file; the lead imports it. To test: import the file in n8n and run it (Execute workflow, or Execute step on the Code node); open the node and check its INPUT and OUTPUT panels; errors show in the node's output with the line number.
 
@@ -383,7 +383,7 @@ IT reviewer can't see why the node is Code.
 ### Works With:
 
 **ai-lead-workflow-n8n**:
-- Building the flow as an import file, and the node types and typeVersions proven in the trial environment (n8n Cloud 2.47)
+- Building the flow as an import file, and the node types and typeVersions proven on n8n Cloud 2.47
 - AI-agent nodes, only when the lead says an AI connection is available
 
 **ai-lead-n8n-expressies**:

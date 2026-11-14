@@ -6,7 +6,7 @@ configure it.
 
 Every block below is the `parameters` object as it appears in workflow JSON (node types in
 LONG form, e.g. `n8n-nodes-base.summarize`). The typeVersions are the current ones at the
-time of writing; for the versions proven in the trial environment (n8n Cloud 2.47), follow
+time of writing; for the versions proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n), follow
 `ai-lead-workflow-n8n`. When you are unsure of a field name or version, say so and let the
 lead build the node once in the n8n editor, select it and copy it (Ctrl/Cmd+C): that JSON is
 the ground truth. Then import the file, run it, and check each node's INPUT and OUTPUT panels.
@@ -240,7 +240,7 @@ Filter (`n8n-nodes-base.filter`, 2.3), IF (`n8n-nodes-base.if`, 2.3) and Switch 
 (`n8n-nodes-base.switch`, 3.4) share one conditions shape. Put the comparison in the
 condition itself instead of computing a flag in an earlier node.
 
-In de proefomgeving bewezen: typeVersion 2.2, typeValidation loose (`"version": 2` in the options); zie ai-lead-workflow-n8n.
+Proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n): typeVersion 2.2, typeValidation loose (`"version": 2` in the options).
 
 ```json
 {
@@ -271,7 +271,7 @@ In de proefomgeving bewezen: typeVersion 2.2, typeValidation loose (`"version": 
 `n8n-nodes-base.dataTable`, typeVersion 1.1, `resource: "row"`, `operation: "get"`. Pick the
 latest or top rows in the query itself instead of fetching everything and sorting in Code.
 
-In de proefomgeving bewezen: mode list met limit (`{"__rl": true, "value": "", "mode": "list"}` and `"limit": 500`); zie ai-lead-workflow-n8n.
+Proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n): mode list with limit (`{"__rl": true, "value": "", "mode": "list"}` and `"limit": 500`).
 
 ```json
 {
@@ -422,8 +422,8 @@ Crypto (`n8n-nodes-base.crypto`, **typeVersion 2**):
 }
 ```
 
-No `credentials` block in the import file: the node needs a `crypto` credential, and leads
-can only view credentials, not create them. After import the node shows the credential as
+No `credentials` block in the import file: the node needs a `crypto` credential, and if your role
+can only view credentials, you cannot create one. After import the node shows the credential as
 missing; linking one is for whoever manages credentials on the instance.
 
 IF condition (GitHub sends `X-Hub-Signature-256: sha256=<hex>`; other providers differ, so

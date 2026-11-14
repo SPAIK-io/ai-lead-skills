@@ -30,6 +30,15 @@ BEGIN = {
     "n8n-nodes-base.scheduleTrigger",
 }
 MEER_INGANGEN = {"n8n-nodes-base.merge", "n8n-nodes-base.compareDatasets"}
+# Interne n8n-blokken die niet met een ander systeem praten, maar ook niet bewezen zijn.
+KERN = {"n8n-nodes-base." + k for k in (
+    "noOp", "stickyNote", "wait", "splitOut", "aggregate", "limit", "removeDuplicates",
+    "dateTime", "splitInBatches", "extractFromFile", "convertToFile", "html", "xml", "markdown",
+    "compareDatasets", "renameKeys", "switch", "crypto", "respondToWebhook", "form", "stopAndError",
+)} | BEGIN
+CODE_SLEUTELS = {"jsCode", "pythonCode"}
+CODE_NAAR_BUITEN = re.compile(r"httpRequest|\bfetch\s*\(")
+DATATABLE_OK = {"get", "insert"}
 # Blokken die met een ander systeem praten. Ook hun Trigger- en Tool-variant telt mee.
 KOPPELINGEN = {
     "httpRequest", "emailSend", "emailReadImap", "microsoftOutlook", "microsoftTeams",
@@ -38,6 +47,7 @@ KOPPELINGEN = {
     "postgres", "mySql", "microsoftSql", "mongoDb", "redis", "oracleDatabase", "snowflake",
     "ftp", "ssh", "executeCommand", "readWriteFile", "awsS3", "sendGrid", "twilio", "openAi",
     "jira", "salesforce", "hubspot", "notion", "airtable", "supabase", "graphql", "rssFeedRead",
+    "aiTransform", "n8n",
 }
 KOPPEL_TEKST = "koppeling of AI-blok: niet toegestaan zonder akkoord"
 UUID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
@@ -110,6 +120,8 @@ def check(pad):
     if not isinstance(nodes, list):
         fouten.append("'nodes' is geen lijst")
         nodes = []
+    elif not nodes:
+        fouten.append("'nodes' is leeg: er staat geen enkel blok in de flow")
     connections = wf.get("connections", {})
     if not isinstance(connections, dict):
         fouten.append("'connections' is geen object")
@@ -122,7 +134,7 @@ def check(pad):
     if wf.get("pinData"):
         fouten.append("pinData is niet leeg: vastgezette gegevens, mogelijk echte gegevens. Haal ze weg")
 
-    soorten, namen = {}, set()
+    soorten, namen, ids = {}, set(), set()
     geldige_nodes = []
     for i, n in enumerate(nodes):
         if not isinstance(n, dict):
@@ -135,6 +147,10 @@ def check(pad):
         if naam in namen:
             fouten.append(f"naam dubbel: '{naam}' (verbindingen gaan op naam)")
         namen.add(naam)
+        nid = str(n.get("id", "")).lower()
+        if nid and nid in ids:
+            fouten.append(f"'{naam}': id dubbel ({n.get('id')}); elk blok heeft een eigen id nodig")
+        ids.add(nid)
         soorten[naam] = n.get("type")
         geldige_nodes.append(n)
 
@@ -146,6 +162,8 @@ def check(pad):
             continue
         if "typeVersion" not in n:
             fouten.append(f"'{naam}': typeVersion ontbreekt")
+        elif versie(n.get("typeVersion")) is None:
+            fouten.append(f"'{naam}': typeVersion '{n.get('typeVersion')}' is geen getal")
         pos = n.get("position")
         if not (isinstance(pos, list) and len(pos) == 2
                 and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in pos)):
@@ -156,19 +174,27 @@ def check(pad):
             continue
 
         v = versie(n.get("typeVersion"))
+        notitie_gemeld = False
         if is_koppeling(soort):
             fouten.append(f"'{naam}': {soort}: {KOPPEL_TEKST}")
         elif soort == CODE:
             notitie = str(n.get("notes", "")).lstrip().lower()
             if not notitie.startswith(("waarom code:", "why code:")):
-                fouten.append(f"'{naam}': notitie van een codeblok begint niet met 'Waarom code:'")
+                fouten.append(f"'{naam}': codeblok zonder notitie die begint met 'Waarom code:'")
+                notitie_gemeld = True
             letop.append(f"'{naam}': codeblok; de lead moet het kunnen uitleggen en IT kijkt extra mee")
-        elif soort not in BEWEZEN:
+            code = " ".join(str(params.get(k, "")) for k in CODE_SLEUTELS)
+            if CODE_NAAR_BUITEN.search(code):
+                letop.append(f"'{naam}': code roept iets buiten n8n aan (httpRequest of fetch); dat is een koppeling")
+        elif soort in BEWEZEN:
+            if v is not None and v not in {float(x) for x in BEWEZEN[soort]}:
+                letop.append(f"'{naam}': {soort} versie {n.get('typeVersion')}, bewezen is {sorted(BEWEZEN[soort])}")
+        elif soort in KERN:
             letop.append(f"'{naam}': blok {soort} staat niet in de bouwstenen (niet getest)")
-        elif v is not None and v not in {float(x) for x in BEWEZEN[soort]}:
-            letop.append(f"'{naam}': {soort} versie {n.get('typeVersion')}, bewezen is {sorted(BEWEZEN[soort])}")
+        else:
+            fouten.append(f"'{naam}': {soort}: onbekend blok, mogelijk koppeling: eerst akkoord")
 
-        if not str(n.get("notes", "")).strip() or n.get("notesInFlow") is not True:
+        if not notitie_gemeld and (not str(n.get("notes", "")).strip() or n.get("notesInFlow") is not True):
             fouten.append(f"'{naam}': notitie ontbreekt (notes + notesInFlow: true)")
         if "credentials" in n:
             fouten.append(f"'{naam}': bevat credentials; die horen niet in het bestand")
@@ -180,8 +206,11 @@ def check(pad):
             rl = params.get("dataTableId") if isinstance(params.get("dataTableId"), dict) else {}
             if not rl.get("value"):
                 letop.append(f"'{naam}': geen tabel gekozen; de lead kiest hem na het importeren")
-            if params.get("operation") == "get" and "limit" not in params and not params.get("returnAll"):
+            operatie = params.get("operation", "insert")
+            if operatie == "get" and "limit" not in params and not params.get("returnAll"):
                 letop.append(f"'{naam}': Data Table get zonder limit (standaard maar 50 rijen); zet limit, bv. 500")
+            if operatie not in DATATABLE_OK:
+                letop.append(f"'{naam}': Data Table '{operatie}' verandert of verwijdert rijen; bewezen zijn alleen get en insert")
         voorwaarden = params.get("conditions")
         opties = voorwaarden.get("options") if isinstance(voorwaarden, dict) else None
         if isinstance(opties, dict) and opties.get("typeValidation") == "strict":
@@ -189,7 +218,7 @@ def check(pad):
 
         gemeld_geheim = False
         for sleutel, tekst in teksten(params):
-            if "{{" in tekst and "}}" in tekst and not tekst.startswith("="):
+            if sleutel not in CODE_SLEUTELS and "{{" in tekst and "}}" in tekst and not tekst.startswith("="):
                 letop.append(f"'{naam}': veld '{sleutel}' bevat {{{{ }}}} maar begint niet met '='; n8n leest het als gewone tekst")
             for m in VERWIJZING.finditer(tekst):
                 doel = m.group(2) or m.group(4)

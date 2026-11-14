@@ -16,7 +16,7 @@ en één klein stuk dat je als eerste bouwt.
 
 ## Installeren
 
-Stap-voor-stap met screenshots: de pdf `docs/ai-lead-skills-installeren.pdf` in de GitHub-repo https://github.com/SPAIK-io/ai-lead-skills (die zit niet in de zip).
+Stap-voor-stap met screenshots: de pdf `docs/ai-lead-skills-installeren.pdf` in de GitHub-repo https://github.com/SPAIK-io/ai-lead-skills (niet in elke kopie van de plugin meegeleverd).
 
 **Eén keer, in claude.ai** (werkt op Mac en Windows, geen GitHub-account nodig): klik in het
 chatvenster op `+` > Add plugins > Add > Add from a repository, plak `SPAIK-io/ai-lead-skills` en

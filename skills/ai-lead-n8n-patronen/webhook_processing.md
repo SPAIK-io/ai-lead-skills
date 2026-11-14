@@ -239,7 +239,7 @@ URL: {{$json.body.pull_request.html_url}}
 ### 1. Header or Basic Auth (shared secret)
 **Simple and enough for most internal callers**
 
-Set the Webhook node's `authentication` to `headerAuth` (or `basicAuth` / `jwtAuth`) and attach an existing credential (an administrator creates it; the lead can only view it). n8n
+Set the Webhook node's `authentication` to `headerAuth` (or `basicAuth` / `jwtAuth`) and attach an existing credential (an administrator creates it, if your role can only view credentials). n8n
 rejects requests without the right header before the workflow runs. Never compare a token in an IF node: the secret
 then sits in the workflow JSON, which breaks the "secrets never go in text fields" rule.
 

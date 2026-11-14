@@ -16,7 +16,7 @@ Gebaseerd op czlonkowski/n8n-skills (MIT), commit e037563, aangepast door SPAIK:
 
 Expert guide for writing correct n8n expressions in workflows.
 
-For node types and typeVersions proven in the trial environment (n8n Cloud 2.47), follow `ai-lead-workflow-n8n`; examples here may show other versions.
+For node types and typeVersions proven on n8n Cloud 2.47 (see ai-lead-workflow-n8n), follow `ai-lead-workflow-n8n`; examples here may show other versions.
 
 Data Table dates come back as UTC midnight; the workflow needs `settings.timezone: "Europe/Amsterdam"`, otherwise a date expression shows the day before.
 
