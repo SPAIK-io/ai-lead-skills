@@ -8,13 +8,13 @@
   },
   "metadata": {
     "description": "Skills voor AI leads: van interview tot blueprint tot eerste workflow.",
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "plugins": [
     {
       "name": "ai-lead-skills",
       "description": "De werkwijze van het AI-lead-programma als skills: interview voorbereiden en uitwerken, blueprint maken, en van blueprint naar een eerste workflow in Lleverage (bèta), n8n of Power Automate.",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "source": "./",
       "category": "workflow",
       "tags": [

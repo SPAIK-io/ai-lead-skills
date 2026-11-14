@@ -8,13 +8,14 @@ en één klein stuk dat je als eerste bouwt.
 |---|---|---|
 | `ai-lead-interview` | Vooraf: doelzin, themaguide, vragen op maat, kaartje voor tijdens. Achteraf: transcript naar stappen, getallen, omwegen en gaten, plus terugkoppelbericht. | "interview voorbereiden", "transcript verwerken" |
 | `ai-lead-blueprint` | Interviewmateriaal naar een service blueprint: de stappen van links naar rechts met de banen eronder (de klant, de lijn van zicht, collega's, waarmee, hoe vaak, hoe lang, wat gaat mis, hoe voelt het en voor wie), hoe vaak keer hoe lang uitgerekend, gaten apart, en waar de tijd, de fout en de dip zitten. Met een invulbare HTML. | "blueprint maken", "procesmap maken" |
-| `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan gebouwd in n8n met de n8n-skills en de n8n-MCP (aparte plugin `czlonkowski/n8n-skills`). | "workflow maken in n8n", "bouw dit in n8n" |
+| `ai-lead-workflow-n8n` | Zelfde plannetje-stap, maar dan voor n8n: Claude schrijft de flow als bestand dat je importeert (Import from File) en zelf draait. Geen MCP en geen API-sleutel nodig. Data uit een Data Table of een csv via een formulier; elk blok een Nederlandse naam en een notitie in gewone taal. Met de bewezen bouwstenen en een check. | "workflow maken in n8n", "bouw dit in n8n" |
+| `ai-lead-n8n-patronen`, `-blokken`, `-expressies`, `-bestanden`, `-javascript` | Hulpskills met n8n-vakkennis voor het bouwen als bestand: opbouw van een flow, welk blok met welke instellingen, `{{ }}`-expressies, bestanden en csv, en codeblokken (alleen als niets anders past). | pakt Claude zelf bij het bouwen |
 | `ai-lead-workflow-lleverage` | Van blueprint en één gekozen stap naar een plannetje, en daaruit een importeerbare Lleverage-workflow (gebouwd door een script, dus altijd geldig), met een importchecklist. Kan sinds 0.6.0 ook een databasevraag (alleen lezen, speeltuin). Bèta. | "workflow maken", "bouw dit in Lleverage" |
 | `ai-lead-workflow-power-automate` | Zelfde plannetje-stap, maar dan voor Power Automate: een bouwkaart die je zelf in de designer klikt (welke actie, welke instelling, welke expressie), met een koppelchecklist. | "workflow maken in Power Automate", "bouw dit in Power Automate" |
 
 ## Installeren
 
-Stap-voor-stap met screenshots: [docs/ai-lead-skills-installeren.pdf](docs/ai-lead-skills-installeren.pdf).
+Stap-voor-stap met screenshots: de pdf `docs/ai-lead-skills-installeren.pdf` in de GitHub-repo https://github.com/SPAIK-io/ai-lead-skills (die zit niet in de zip).
 
 **Eén keer, in claude.ai** (werkt op Mac en Windows, geen GitHub-account nodig): klik in het
 chatvenster op `+` > Add plugins > Add > Add from a repository, plak `SPAIK-io/ai-lead-skills` en
@@ -45,3 +46,9 @@ SPAIK beheert deze repo. Iedereen mag lezen en gebruiken; wijzigen gaat via ons,
 iedereen dezelfde versie heeft. Heb je een verbetering: zeg het in de groep of bij de
 maandelijkse sessie, open een issue, of stuur een pull request. Pas de skill niet lokaal
 aan in je eigen `.claude/skills`, want dan mis je elke update.
+
+## Bronvermelding
+
+De vijf skills `ai-lead-n8n-*` zijn gebaseerd op [czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills)
+van Romuald Członkowski (MIT, commit e037563), aangepast door SPAIK: zonder MCP, voor flows als
+importbestand. Licentie, notices en wat we veranderden staan in [`third_party/n8n-skills/`](third_party/n8n-skills/).
